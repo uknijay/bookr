@@ -11,6 +11,7 @@ class Business(models.Model):
         primary_key=True,
         related_name="business",
     )
+    reviewCount = models.PositiveIntegerField(default=0)
 
     displayName = models.CharField(max_length=120)
 
@@ -24,8 +25,10 @@ class Event(models.Model):
     maxCapacity = models.PositiveIntegerField()
     currentCapacity = models.PositiveIntegerField(default=0)
 
-    location = models.CharField(max_length=255)
+    venue = models.CharField(max_length=200)
+    venueAddress = models.CharField(max_length=200)
     date = models.DateTimeField()
+
 
     #TODO: This may need to be changed after merging with the actual business model.
     organiser = models.ForeignKey(
