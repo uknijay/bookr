@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.conf import settings
+from django.utils import timezone
 
 class Business(models.Model):
     #INCOMPLETE: This is just made as a placeholder to make the event model work.
@@ -11,7 +12,7 @@ class Business(models.Model):
         primary_key=True,
         related_name="business",
     )
-    reviewCount = models.PositiveIntegerField(default=0)
+    reviewCount = models.IntegerField(default=0)
 
     displayName = models.CharField(max_length=120)
 
@@ -19,14 +20,15 @@ class Business(models.Model):
         return self.displayName
     
 class Event(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    title = models.CharField(max_length=200, default="")
+    description = models.TextField(blank=True, default="")
 
-    maxCapacity = models.PositiveIntegerField()
+    maxCapacity = models.PositiveIntegerField(default=0)
     currentCapacity = models.PositiveIntegerField(default=0)
 
-    venue = models.CharField(max_length=200)
-    venueAddress = models.CharField(max_length=200)
+    venue = models.CharField(max_length=200, default="")
+    venueAddress = models.CharField(max_length=200, default="")
+    date = models.DateTimeField(default=timezone.now)
     date = models.DateTimeField()
 
 
