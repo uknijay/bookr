@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db.models import Avg
@@ -94,6 +94,26 @@ class Books(models.Model):
 
     class Meta:
         unique_together = ("customerId", "eventId")
+
+    def save(self, *args, **kwargs):
+        # check if new boooking
+        if not self.pk:
+            with transaction.atomic():
+                event = self.eventId
+                # check if space
+                if event.currentCapacity < event.maxCapacity:
+                    event.currentCapacity += 1
+                    event.save()
+                else:
+                    raise Exception("This event is full!")
+        super().save(*args,**kwargs)
+
+    def delete(self, *args, **kwargs):
+        with transaction.atomic():
+            event = self.eventId
+            if event.currentCapacity > 0:
+                event.currentCapacity -= 1
+                event.save()
     
     def __str__(self):
         return f"{self.customerId} booked {self.eventId}"
