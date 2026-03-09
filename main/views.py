@@ -23,3 +23,6 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('discover')
+
+def about(request):
+    return render(request, 'main/static_pages/about.html')
