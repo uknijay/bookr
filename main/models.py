@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db.models import Avg
 from django.contrib.auth.models import User
+from django.utils import timezone   
 
 class Account(models.Model):
     ACCOUNT_TYPE_CHOICES = [
@@ -17,6 +18,10 @@ class Account(models.Model):
 
     def __str__(self):
         return str(self.email) 
+    
+    class Meta:
+        verbose_name = "Account"
+        verbose_name_plural = "Accounts"
 
 class Business(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE, primary_key=True)
@@ -30,6 +35,10 @@ class Business(models.Model):
     
     def __str__(self):
         return str(self.displayName or "Unnamed Business")
+
+    class Meta:
+        verbose_name = "Business"
+        verbose_name_plural = "Businesses"
     
 class Customer(models.Model):
     accountId = models.OneToOneField(Account, on_delete=models.CASCADE, primary_key=True)
@@ -38,6 +47,10 @@ class Customer(models.Model):
     
     def __str__(self):
         return str(self.name or "Unnamed Customer")
+
+    class Meta:
+        verbose_name = "Customer"
+        verbose_name_plural = "Customers"
 
 
 class Event(models.Model):
@@ -61,6 +74,10 @@ class Event(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = "Event"
+        verbose_name_plural = "Events"
+
 
 class EventPhoto(models.Model):
     event = models.ForeignKey(Event,on_delete=models.CASCADE,related_name="photos",)
@@ -69,9 +86,13 @@ class EventPhoto(models.Model):
     order = models.PositiveIntegerField(default=0)
     class Meta:
         ordering = ["order"]
+        verbose_name = "Event Photo"
+        verbose_name_plural = "Event Photos"
+
 
     def __str__(self):
         return f"Photo for {self.event.title}"
+    
     
 
 # M-N Customer <-> Business + rating
@@ -83,6 +104,8 @@ class Rates(models.Model):
 
     class Meta:
         unique_together = ("customerId","businessId")
+        verbose_name = "Rating"
+        verbose_name_plural = "Ratings"
 
     def __str__(self):
         return f"{self.customerId} rated {self.businessId}: {self.rating}"
@@ -96,6 +119,9 @@ class Books(models.Model):
 
     class Meta:
         unique_together = ("customerId", "eventId")
+        verbose_name = "Booking"
+        verbose_name_plural = "Bookings"
+
 
     def save(self, *args, **kwargs):
         # check if new boooking
