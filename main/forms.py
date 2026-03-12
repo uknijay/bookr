@@ -21,3 +21,10 @@ class LoginForm(AuthenticationForm):
         required=False,
         widget=forms.CheckboxInput()
     )
+
+class BookingForm(forms.Form):
+    confirm_booking = forms.BooleanField(
+        required=True,
+        widget=forms.HiddenInput(),
+        initial=True,
+    )

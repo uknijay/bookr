@@ -1,9 +1,11 @@
+from pyexpat.errors import messages
+
 from django.utils import timezone
-from .models import Event
+from .models import Account, Books, Customer, Event
 
 from django.http import HttpResponse
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -68,4 +70,36 @@ def event_detail(request, event_id):
         "capacityPercent": capacityPercent,
     })
 
+@login_required
+def book_event(request, event_id):
+    if request.method != "POST":
+        return redirect("event_detail", event_id=event_id)
+
+    event =  get_object_or_404(Event, id=event_id)
+
+    try:
+        account = Account.objects.get(email=request.user.email)
+        customer = Customer.objects.get(accountId=account)
+
+    except Account.DoesNotExist:
+
+        messages.error(request, "User does not exist")
+        return redirect("event_detail", event_id=event_id)
+    
+    except Customer.DoesNotExist:
+        messages.error(request, "Customer profile not found")
+        return redirect("event_detail", event_id=event_id)
+
+    if Books.objects.filter(customerId=customer, eventId=event).exists():
+        messages.warning(request, "User already booked this event")
+        return redirect("event_detail", event_id=event_id)
+
+    try:
+        Books.objects.create(customerId=customer, eventId=event)
+        messages.success(request, "Booking created successfully.")
+        
+    except Exception as e:
+        messages.error(request, str(e))
+
+    return redirect("event_detail", event_id=event_id)
 
