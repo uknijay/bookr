@@ -5,6 +5,7 @@ from django.db.models import Avg
 from django.contrib.auth.models import User
 from django.utils import timezone   
 
+
 class Account(models.Model):
     ACCOUNT_TYPE_CHOICES = [
     # Constant = value in db , label for humans
