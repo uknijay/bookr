@@ -41,13 +41,15 @@ class Customer(models.Model):
 
 
 class Event(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    title = models.CharField(max_length=200, default="")
+    description = models.TextField(blank=True, default="")
 
-    maxCapacity = models.PositiveIntegerField()
+    maxCapacity = models.PositiveIntegerField(default=0)
     currentCapacity = models.PositiveIntegerField(default=0)
 
-    location = models.CharField(max_length=255)
+    venue = models.CharField(max_length=200, default="")
+    venueAddress = models.CharField(max_length=200, default="")
+    date = models.DateTimeField(default=timezone.now)
     date = models.DateTimeField()
 
     organiser = models.ForeignKey(
