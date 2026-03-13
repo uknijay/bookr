@@ -419,11 +419,24 @@
         </div>
 
         <div class="qi-actions">
-          <form method="post" action="{% url 'book_event' event.id %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary btn-lg">Book</button>
-          </form>
-          <div class="qi-sub">Booking is Instant</div>
+          {% if request.user.is_authenticated %}
+            {% if hasBooked %}
+              <form method="post" action="{% url 'cancel_booking' event.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg">Un-Book</button>
+              </form>
+              <div class="qi-sub">You already booked this event</div>
+            {% else %}
+              <form method="post" action="{% url 'book_event' event.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg">Book</button>
+              </form>
+              <div class="qi-sub">Booking is Instant</div>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg d-block text-center">Log in to Book</a>
+            <div class="qi-sub">You need to be logged in</div>
+          {% endif %}
         </div>
       </aside>
     </section>

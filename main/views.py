@@ -63,11 +63,24 @@ def event_detail(request, event_id):
         if capacityPercent > 100:
             capacityPercent = 100
 
+    hasBooked = False
+
+    if request.user.is_authenticated:
+        try:
+            account = Account.objects.get(email=request.user.email)
+            customer = Customer.objects.get(accountId=account)
+            hasBooked = Books.objects.filter(customerId=customer, eventId=event).exists()
+        except Account.DoesNotExist:
+            hasBooked = False
+        except Customer.DoesNotExist:
+            hasBooked = False
+
     return render(request, "main/events/detail.html", {
         "event": event,
         "eventPhotos": eventPhotos,
         "daysUntilStart": daysUntilStart,
         "capacityPercent": capacityPercent,
+        "hasBooked": hasBooked,
     })
 
 @login_required
@@ -85,7 +98,7 @@ def book_event(request, event_id):
 
     except Account.DoesNotExist:
 
-        messages.error(request, "User does not exist")
+        messages.error(request, "No user found")
         return redirect("event_detail", event_id=event_id)
     
     except Customer.DoesNotExist:
@@ -93,15 +106,39 @@ def book_event(request, event_id):
         return redirect("event_detail", event_id=event_id)
 
     if Books.objects.filter(customerId=customer, eventId=event).exists():
-        messages.warning(request, "User already booked this event")
+        messages.warning(request, "You have already booked this event")
         return redirect("event_detail", event_id=event_id)
 
     try:
         Books.objects.create(customerId=customer, eventId=event)
-        messages.success(request, "Booking created successfully.")
+        messages.success(request, "Booking created successfully")
         
     except Exception as e:
         messages.error(request, str(e))
 
     return redirect("event_detail", event_id=event_id)
 
+@login_required
+def cancel_booking(request, event_id):
+    if request.method != "POST":
+        return redirect("event_detail", event_id=event_id)
+
+    event = get_object_or_404(Event, id=event_id)
+
+    try:
+        account = Account.objects.get(email=request.user.email)
+        customer = Customer.objects.get(accountId=account)
+        booking = Books.objects.get(customerId=customer, eventId=event)
+    except Account.DoesNotExist:
+        messages.error(request, "No user found")
+        return redirect("event_detail", event_id=event_id)
+    except Customer.DoesNotExist:
+        messages.error(request, "Customer profile not found")
+        return redirect("event_detail", event_id=event_id)
+    except Books.DoesNotExist:
+        messages.warning(request, "No booking found for this event")
+        return redirect("event_detail", event_id=event_id)
+
+    booking.delete()
+    messages.success(request, "Booking cancelled successfully")
+    return redirect("event_detail", event_id=event_id)
