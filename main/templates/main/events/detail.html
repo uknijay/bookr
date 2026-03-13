@@ -308,6 +308,14 @@
 
   <main class="page">
 
+    {% if messages %}
+      <div style="margin-bottom: 16px;">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <section class="titleblock">
         <h1>{{ event.title }}</h1>
         <div class="byline">By {{ event.organiser.displayName }}</div>
@@ -399,8 +407,11 @@
         </div>
 
         <div class="qi-actions">
-            <button type="button" id="bookButton" class="btn btn-primary btn-lg">Book</button>
-            <div class="qi-sub">Booking is Instant</div>
+          <form method="post" action="{% url 'book_event' event.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg">Book</button>
+          </form>
+          <div class="qi-sub">Booking is Instant</div>
         </div>
       </aside>
     </section>
@@ -424,6 +435,7 @@
         </div>
     </section>
   </main>
+
 
   <!-- Booking Button Functionality-->
   <script>

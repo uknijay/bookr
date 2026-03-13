@@ -1,4 +1,4 @@
-from pyexpat.errors import messages
+from django.contrib import messages
 
 from django.utils import timezone
 from .models import Account, Books, Customer, Event
@@ -72,6 +72,8 @@ def event_detail(request, event_id):
 
 @login_required
 def book_event(request, event_id):
+    print("USERNAME:", request.user.username)
+    print("EMAIL:", request.user.email)
     if request.method != "POST":
         return redirect("event_detail", event_id=event_id)
 
