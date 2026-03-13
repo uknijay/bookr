@@ -15,6 +15,9 @@ from .forms import LoginForm
 def discover(request):
     return render(request, "main/events/discover.html")
 
+def contact(request):
+    return render(request, "main/static_pages/contact.html")
+
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
