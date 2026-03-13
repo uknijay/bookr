@@ -96,25 +96,24 @@
     }
   </style>
 </head>
-<body>
-
-  <div class="card event-card">
+<div class="card event-card">
+  {% if event.photos.first %}
+    <img src="{{ event.photos.first.image.url }}" class="card-img-top" alt="{{ event.title }}">
+  {% else %}
     <img src="https://placehold.co/600x400" class="card-img-top" alt="Event image">
+  {% endif %}
 
-    <div class="card-body">
-      <h3 class="card-title">Event Title</h3>
-      <p class="location-text">Glasgow City Centre</p>
+  <div class="card-body">
+    <h3 class="card-title">{{ event.title }}</h3>
+    <p class="location-text">{{ event.venue }}</p>
 
-      <hr class="card-divider">
+    <hr class="card-divider">
 
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <p class="date-text">May 22nd</p>
-        <span class="capacity-badge">12 / 50</span>
-      </div>
-
-      <a href="#" class="btn btn-view w-100">View Event</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <p class="date-text">{{ event.date|date:"M jS" }}</p>
+      <span class="capacity-badge">{{ event.currentCapacity }} / {{ event.maxCapacity }}</span>
     </div>
-  </div>
 
-</body>
-</html>
+    <a href="{% url 'event_detail' event.id %}" class="btn btn-view w-100">View Event</a>
+  </div>
+</div>
