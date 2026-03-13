@@ -323,7 +323,13 @@
 
         <div class="ratingrow" aria-label="rating">
           <span class="stars" aria-hidden="true">★★★★☆</span>
-          <span class="ratingnum">{{ event.organiser.rating }}</span>
+          <span class="ratingnum">
+            {% if event.organiser.avgRating %}
+              {{ event.organiser.avgRating|floatformat:1 }}
+            {% else %}
+              No ratings yet
+            {% endif %}
+          </span>
           <span class="ratingcount">({{ event.organiser.reviewCount }})</span>
       </div>
     </section>

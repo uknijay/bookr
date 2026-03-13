@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.conf import settings
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.contrib.auth.models import User
 from django.utils import timezone   
 
@@ -33,6 +33,8 @@ class Business(models.Model):
     def avgRating(self):
         result = Rates.objects.filter(businessId=self).aggregate(avg=Avg("rating"))
         return result["avg"]
+    
+    
     
     def __str__(self):
         return str(self.displayName or "Unnamed Business")
