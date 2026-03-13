@@ -34,7 +34,11 @@ class Business(models.Model):
         result = Rates.objects.filter(businessId=self).aggregate(avg=Avg("rating"))
         return result["avg"]
     
-    
+    @property
+    def wholeRating(self):
+        if self.avgRating is None:
+            return 0
+        return int(self.avgRating)
     
     def __str__(self):
         return str(self.displayName or "Unnamed Business")

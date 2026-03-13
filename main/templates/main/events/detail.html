@@ -322,7 +322,13 @@
 
 
         <div class="ratingrow" aria-label="rating">
-          <span class="stars" aria-hidden="true">★★★★☆</span>
+          <span class="stars" aria-hidden="true">
+          {% if event.organiser.wholeRating >= 1 %}★{% else %}☆{% endif %}
+          {% if event.organiser.wholeRating >= 2 %}★{% else %}☆{% endif %}
+          {% if event.organiser.wholeRating >= 3 %}★{% else %}☆{% endif %}
+          {% if event.organiser.wholeRating >= 4 %}★{% else %}☆{% endif %}
+          {% if event.organiser.wholeRating >= 5 %}★{% else %}☆{% endif %}
+        </span>
           <span class="ratingnum">
             {% if event.organiser.avgRating %}
               {{ event.organiser.avgRating|floatformat:1 }}
