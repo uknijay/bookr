@@ -4,6 +4,8 @@ from django.core.validators import MinLengthValidator, MinValueValidator, MaxVal
 from django.db.models import Avg
 from django.contrib.auth.models import User
 from django.utils import timezone   
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 
 class Account(models.Model):
@@ -64,7 +66,6 @@ class Event(models.Model):
     venue = models.CharField(max_length=200, default="")
     venueAddress = models.CharField(max_length=200, default="")
     date = models.DateTimeField(default=timezone.now)
-    date = models.DateTimeField()
 
     organiser = models.ForeignKey(
         Business,
@@ -93,7 +94,6 @@ class EventPhoto(models.Model):
 
     def __str__(self):
         return f"Photo for {self.event.title}"
-    
     
 
 # M-N Customer <-> Business + rating
@@ -133,17 +133,20 @@ class Books(models.Model):
                 if event.currentCapacity < event.maxCapacity:
                     event.currentCapacity += 1
                     event.save()
+                    super().save(*args,**kwargs)
                 else:
                     raise Exception("This event is full!")
-        super().save(*args,**kwargs)
-
-    def delete(self, *args, **kwargs):
-        with transaction.atomic():
-            event = self.eventId
-            if event.currentCapacity > 0:
-                event.currentCapacity -= 1
-                event.save()
     
     def __str__(self):
         return f"{self.customerId} booked {self.eventId}"
 
+
+# Special function to properly delete bookings
+@receiver(post_delete, sender=Books)
+def decrement_capacity(sender, instance, **kwargs):
+    with transaction.atomic():
+        event = instance.eventId
+        if event.currentCapacity > 0:
+            event.currentCapacity -= 1
+            event.save()
+    
