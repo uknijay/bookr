@@ -17,6 +17,9 @@ from .forms import LoginForm
 def discover(request):
     return render(request, "main/events/discover.html")
 
+def contact(request):
+    return render(request, "main/static_pages/contact.html")
+
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -142,3 +145,5 @@ def cancel_booking(request, event_id):
     booking.delete()
     messages.success(request, "Booking cancelled successfully")
     return redirect("event_detail", event_id=event_id)
+def about(request):
+    return render(request, "main/static_pages/about.html")
