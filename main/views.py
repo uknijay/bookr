@@ -13,7 +13,10 @@ from main.models import EventPhoto
 from .forms import LoginForm
 
 def discover(request):
-    return render(request, "main/events/discover.html")
+    events = Event.objects.all()
+    return render(request, "main/events/discover.html", {
+        "events": events,
+    })
 
 def contact(request):
     return render(request, "main/static_pages/contact.html")
