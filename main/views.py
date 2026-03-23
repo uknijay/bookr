@@ -6,6 +6,12 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from .decorators import *
+from main.models import EventPhoto, Account
+from .decorators import *
+from main.models import EventPhoto, Account
+from .forms import LoginForm
+from datetime import datetime
+from django.db.models import Q
 from main.models import EventPhoto, Account, Books
 from .forms import *
 from django.db import transaction
@@ -149,6 +155,9 @@ def book_event(request, event_id):
         messages.error(request, str(e))
 
     return redirect("event_detail", event_id=event_id)
+
+def about(request):
+    return render(request, "main/static_pages/about.html")
 
 
 

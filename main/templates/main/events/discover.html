@@ -28,17 +28,6 @@
     color: #444;
   }
 
-  .discover-searchbar {
-    max-width: 860px;
-    margin: 28px auto 0;
-    padding: 18px 24px;
-    background: #e6e6e6;
-    border-radius: 999px;
-    color: #666;
-    font-size: 18px;
-    text-align: left;
-  }
-
   .discover-divider {
     border: none;
     border-top: 1px solid rgba(0,0,0,0.1);
@@ -73,7 +62,7 @@
   <section class="discover-hero">
     <h1 class="discover-title">Discover the best events near you</h1>
     <p class="discover-subtitle">Explore top events and book with ease</p>
-    <div class="discover-searchbar">Search</div>
+          {% include "main/components/search_bar.html" %}
   </section>
 
   <hr class="discover-divider">
