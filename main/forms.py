@@ -2,12 +2,12 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(
+    email = forms.CharField(
         max_length=150,
         widget=forms.TextInput(attrs={
             'class': 'form-input',
-            'placeholder': 'Enter your username',
-            'id': 'id_username'
+            'placeholder': 'Enter your email',
+            'id': 'id_email'
         })
     )
     password = forms.CharField(
@@ -19,5 +19,7 @@ class LoginForm(AuthenticationForm):
     )
     remember_me = forms.BooleanField(
         required=False,
-        widget=forms.CheckboxInput()
+        widget=forms.CheckboxInput(attrs={
+            'id': 'remember_me'
+        })
     )
