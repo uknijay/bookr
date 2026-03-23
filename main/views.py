@@ -100,6 +100,7 @@ def register_user(request, accountType):
 def event_detail(request, event_id):
 
     event =  get_object_or_404(Event, id=event_id)
+    event =  get_object_or_404(Event, id=event_id)
     eventPhotos = EventPhoto.objects.filter(event=event)
 
 
@@ -131,7 +132,6 @@ def event_detail(request, event_id):
 def book_event(request, event_id):
     if request.method != "POST":
         return redirect("event_detail", event_id=event_id)
-
 
     event =  get_object_or_404(Event, id=event_id)
     customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
