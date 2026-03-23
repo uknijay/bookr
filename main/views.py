@@ -71,4 +71,5 @@ def event_detail(request, event_id):
         "capacityPercent": capacityPercent,
     })
 
-
+def about(request):
+    return render(request, "main/static_pages/about.html")
