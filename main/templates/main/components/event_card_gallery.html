@@ -2,7 +2,7 @@
   <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
     {% for event in events %}
       <div class="col d-flex">
-        {% include "components/event_card.html" with event=event %}
+        {% include "main/components/event_card.html" with event=event %}
       </div>
     {% empty %}
       <div class="col-12">
