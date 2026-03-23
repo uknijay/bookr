@@ -1,7 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
+{% extends "main/base.html" %}
 
+
+{% block title %}{{ event.title }}{% endblock %}
+{% load static %}
+
+{% load static %}
+{% block extra_head %}
   <!-- Inter Font-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,11 +14,16 @@
   <!-- Bootstrap Icon and CSS-->
   <link rel="stylesheet" href= "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Bootstrap-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ event.title }}</title>
+{% endblock %}
 
+{% block content %}
   <style>
     :root{
       --max-width: 1100px;
@@ -42,11 +51,7 @@
     }
 
 
-    .topbar{
-      height: 64px;
-      background: var(--accent);
-      box-shadow: 0 8px 18px rgba(0,0,0,.10);
-    }
+    
 
 
     .page{
@@ -317,8 +322,7 @@
         {% endfor %}
     </div>
 {% endif %}
-<!-- end -->
-  <div class="topbar"></div>
+
 
   <main class="page">
 
@@ -416,7 +420,7 @@
           <form method="POST" action="{% url 'book_event' event.id %}">
             {% csrf_token %}
               <button type="submit" class="btn btn-primary btn-lg">Book</button>
-          </form>>
+          </form>
             <div class="qi-sub">Booking is Instant</div>
         </div>
 
@@ -443,10 +447,5 @@
     </section>
   </main>
 
-  <!-- Bootstrap-->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-</body>
-</html>
+{% endblock %}

@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bookr</title>
+  <title>{% block title %} - Bookr{% endblock %}</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+
+  {% block extra_head %}{% endblock %}
   <style>
     :root {
       --accent: #005493;
@@ -126,18 +128,25 @@
 
   <header class="site-header">
     <div class="site-header-inner">
-      <a href="/" class="site-logo">
+      <a href="{% url 'discover' %}" class="site-logo">
         <img src="/media/bookr_logo.png" alt="Bookr logo">
 
       </a>
 
       <nav class="site-nav">
-        <a href="{% url 'login' %}">Sign in</a>
+        {% if request.session.accountId %}
+          <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+          <a href="{% url 'login' %}">Sign in</a>
+        {% endif %}
       </nav>
     </div>
   </header>
 
-  {% block content %}{% endblock %}
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
 </body>
+</html>
 </html>
