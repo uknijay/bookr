@@ -8,6 +8,8 @@ from main.models import EventPhoto, Account
 from .decorators import *
 from main.models import EventPhoto, Account
 from .forms import LoginForm
+from datetime import datetime
+from django.db.models import Q
 
 
 ## NOTE: Look at /decorators.py, can use these to check if user is logged in and allow only logged in user to access view. 
@@ -119,3 +121,6 @@ def book_event(request, event_id):
 
 def about(request):
     return render(request, "main/static_pages/about.html")
+
+
+
