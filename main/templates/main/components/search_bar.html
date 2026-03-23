@@ -105,19 +105,20 @@
   }
 
 </style>
+
 <div class="search-bar-wrapper">
-  <form class="search-bar" method="get" >
+  <form class="search-bar" method="get" action="{% url 'discover' %}">
     <div class="search-segment">
       <i class="bi bi-calendar3 search-icon"></i>
       <div class="search-text">
         <label for="search-date" class="search-label">Dates</label>
         <input
-          type="date"
-          id="search-date"
-          name="date"
-          class="search-input"
-          value="{{ request.GET.date|default:'' }}"
-        >
+            type="date"
+            id="search-date"
+            name="date"
+            class="search-input"
+            value="{{ request.GET.date|default:'' }}"
+            >
       </div>
     </div>
 
