@@ -6,11 +6,12 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from main.models import EventPhoto
 
 from main.models import EventPhoto
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 
 def discover(request):
     return render(request, "main/events/discover.html")
@@ -73,3 +74,24 @@ def event_detail(request, event_id):
 
 def about(request):
     return render(request, "main/static_pages/about.html")
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect("profile")
+
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Account created successfully.")
+            return redirect("profile")
+    else:
+        form = RegistrationForm()
+
+    return render(request, "main/account/register.html", {"form": form})
+
+
+@login_required
+def profile_view(request):
+    return render(request, "main/account/profile.html")
