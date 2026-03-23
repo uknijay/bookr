@@ -1,6 +1,88 @@
 {% extends "main/base.html" %}
 
 {% block content %}
-  <h1>Bookr | Discover</h1>
-  <p>Browse trending events or search by location, date, and category.</p>
+<style>
+  .discover-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 48px;
+  }
+
+  .discover-hero {
+    text-align: center;
+    padding: 40px 0 30px;
+  }
+
+  .discover-title {
+    margin: 0 auto;
+    max-width: 900px;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #111;
+  }
+
+  .discover-subtitle {
+    margin-top: 16px;
+    font-size: 22px;
+    color: #444;
+  }
+
+  .discover-searchbar {
+    max-width: 860px;
+    margin: 28px auto 0;
+    padding: 18px 24px;
+    background: #e6e6e6;
+    border-radius: 999px;
+    color: #666;
+    font-size: 18px;
+    text-align: left;
+  }
+
+  .discover-divider {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin: 10px 0 28px;
+  }
+
+  .discover-section h2 {
+    margin-bottom: 18px;
+    font-size: 34px;
+    font-weight: 700;
+    color: #111;
+  }
+
+  .discover-gallery .container {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  @media (max-width: 768px) {
+    .discover-title {
+      font-size: 36px;
+    }
+
+    .discover-subtitle {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<div class="discover-page">
+  <section class="discover-hero">
+    <h1 class="discover-title">Discover the best events near you</h1>
+    <p class="discover-subtitle">Explore top events and book with ease</p>
+    <div class="discover-searchbar">Search</div>
+  </section>
+
+  <hr class="discover-divider">
+
+  <section class="discover-section">
+    <h2>Trending</h2>
+    <div class="discover-gallery">
+      {% include "main/components/event_card_gallery.html" with events=events %}
+    </div>
+  </section>
+</div>
 {% endblock %}
