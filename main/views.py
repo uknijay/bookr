@@ -22,8 +22,32 @@ from django.db import transaction
 
 
 
+
+
 def discover(request):
     events = Event.objects.all()
+
+    query = request.GET.get("q", "").strip()
+    location = request.GET.get("location", "").strip()
+    date = request.GET.get("date", "").strip()
+
+    if query:
+        events = events.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    if location:
+        events = events.filter(
+            Q(venue__icontains=location) |
+            Q(venueAddress__icontains=location)
+        )
+
+    if date:
+        events = events.filter(date__date=date)
+
+    events = events.order_by("date")
+
     return render(request, "main/events/discover.html", {
         "events": events,
     })
@@ -158,6 +182,4 @@ def book_event(request, event_id):
 
 def about(request):
     return render(request, "main/static_pages/about.html")
-
-
 
