@@ -1,9 +1,10 @@
 from django.utils import timezone
-from .models import Event
-
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404, render, redirect
+from .models import Event, Customer, Books
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import check_password
+from .decorators import *
+from main.models import EventPhoto, Account
 from .decorators import *
 from main.models import EventPhoto, Account
 from .forms import LoginForm
@@ -64,9 +65,9 @@ def user_logout(request):
     request.session.flush()
     return redirect('discover')
 
-def event_detail(request, eventId):
+def event_detail(request, event_id):
 
-    event =  get_object_or_404(Event, id=eventId)
+    event =  get_object_or_404(Event, id=event_id)
     eventPhotos = EventPhoto.objects.filter(event=event)
 
 
@@ -95,16 +96,16 @@ def event_detail(request, eventId):
     })
 
 @customer_required #Decorator handles checking if user logged in and is customer, if not logged in --> /login, if not customer --> /discover
-def book_event(request, eventId):
+def book_event(request, event_id):
     if request.method != "POST":
-        return redirect("event_detail", event_id=eventId)
+        return redirect("event_detail", event_id=event_id)
 
-    event =  get_object_or_404(Event, id=eventId)
+    event =  get_object_or_404(Event, id=event_id)
     customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
 
     if Books.objects.filter(customerId=customer, eventId=event).exists():
         messages.warning(request, "User already booked this event")
-        return redirect("event_detail", event_id=eventId)
+        return redirect("event_detail", event_id=event_id)
 
     try:
         booking = Books(customerId=customer, eventId=event)
@@ -114,7 +115,7 @@ def book_event(request, eventId):
     except Exception as e:
         messages.error(request, str(e))
 
-    return redirect("event_detail", event_id=eventId)
+    return redirect("event_detail", event_id=event_id)
 
 def about(request):
     return render(request, "main/static_pages/about.html")
