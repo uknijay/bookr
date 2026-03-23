@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Login - Bookr</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
+{% extends "main/base.html" %}
+
+
+{% block title %}Login - Bookr{% endblock %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
 <body>
-    <header class="login-header">
-        <a href="/" class="logo">Bookr</a>
-    </header>
 
     <div class="login-wrapper">
         <div class="login-left">
@@ -82,17 +82,10 @@ body {
     z-index: 100;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: 700;
-    color: #4a90e2;
-    text-decoration: none;
-}
 
 .login-wrapper {
     display: flex;
-    min-height: 100vh;
-    padding-top: 70px;
+    min-height: calc(100vh - 72px);
 }
 
 .login-left {
@@ -279,3 +272,5 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+{% endblock %}
