@@ -1,21 +1,14 @@
 from django.utils import timezone
-from .models import Event, Customer
-
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
-from .decorators import *
-from main.models import EventPhoto, Account
-from .decorators import *
-from main.models import EventPhoto, Account
-from .forms import LoginForm, EventForm
-from datetime import datetime
 from django.db.models import Q
-from main.models import EventPhoto, Account, Books
-from .forms import *
 from django.db import transaction
 
+from .decorators import *
+from .forms import LoginForm, EventForm, RegistrationForm
+from .models import Event, Customer, Business
+from main.models import EventPhoto, Account, Books, Rates
 
 ## NOTE: Look at /decorators.py, can use these to check if user is logged in and allow only logged in user to access view. 
 ##       This is good for like "create event", "rate business", "book event" etc, 
@@ -161,6 +154,30 @@ def event_detail(request, event_id):
         if capacityPercent > 100:
             capacityPercent = 100
 
+
+    event_has_passed = event.date < timezone.now()
+    
+    show_rating_component = False
+    existing_rating = None
+
+    if request.session.get("accountId") and request.session.get("accountType") == "customer":
+        customer = Customer.objects.filter(accountId=request.session.get("accountId")).first()
+
+        if customer:
+            has_booked = Books.objects.filter(customerId=customer, eventId=event).exists()
+            
+
+            if has_booked and event_has_passed:
+                show_rating_component = True
+
+                existing_rate = Rates.objects.filter(
+                    customerId=customer,
+                    businessId=event.organiser
+                ).first()
+
+                if existing_rate:
+                    existing_rating = existing_rate.rating
+
     return render(request, "main/events/detail.html", {
         "event": event,
         "eventPhotos": eventPhotos,
@@ -169,7 +186,11 @@ def event_detail(request, event_id):
         "avgRating": avgRating,
         "reviewCount": reviewCount,
         "starDisplay": starDisplay,
+        "show_rating_component": show_rating_component,
+        "existing_rating": existing_rating,
+        "event_has_passed": event_has_passed,
     })
+
 
 @customer_required #Decorator handles checking if user logged in and is customer, if not logged in --> /login, if not customer --> /discover
 def book_event(request, event_id):
@@ -232,3 +253,36 @@ def create_event(request):
         "form": EventForm(),
         "form_data": {},
     })
+
+
+
+@customer_required
+def rate_event(request, event_id):
+
+    if request.method != "POST":
+        return redirect("event_detail", event_id=event_id)
+
+    event = get_object_or_404(Event, id=event_id)
+    customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
+
+    has_booked = Books.objects.filter(customerId=customer, eventId=event).exists()
+    event_has_passed = event.date <= timezone.now()
+
+    if not has_booked or not event_has_passed:
+        messages.error(request, "You can only rate events you booked after they have passed")
+        return redirect("event_detail", event_id=event_id)
+
+    try:
+        rating_value = int(request.POST.get("rating"))
+    except (TypeError, ValueError):
+        messages.error(request, "Invalid rating")
+        return redirect("event_detail", event_id=event_id)
+
+    Rates.objects.update_or_create(
+        customerId=customer,
+        businessId=event.organiser,
+        defaults={"rating": rating_value}
+    )
+
+    messages.success(request, "Rating submitted successfully.")
+    return redirect("event_detail", event_id=event_id)
