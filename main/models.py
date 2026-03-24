@@ -19,6 +19,11 @@ class Account(models.Model):
     password = models.CharField(max_length=255) # Store as hash value
     accountType = models.CharField(max_length=50,choices = ACCOUNT_TYPE_CHOICES, default ="customer")
 
+    @property
+    def avgRating(self):
+        result = Rates.objects.filter(businessId=self).aggregate(avg=Avg("rating"))
+        return result["avg"]
+
     def __str__(self):
         return str(self.email) 
     
@@ -35,6 +40,10 @@ class Business(models.Model):
     def avgRating(self):
         result = Rates.objects.filter(businessId=self).aggregate(avg=Avg("rating"))
         return result["avg"]
+    
+    @property
+    def reviewCount(self):
+        return Rates.objects.filter(businessId=self).count()
     
     def __str__(self):
         return str(self.displayName or "Unnamed Business")
