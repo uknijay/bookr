@@ -9,7 +9,7 @@ from .decorators import *
 from main.models import EventPhoto, Account
 from .decorators import *
 from main.models import EventPhoto, Account
-from .forms import LoginForm
+from .forms import LoginForm, EventForm
 from datetime import datetime
 from django.db.models import Q
 from main.models import EventPhoto, Account, Books
@@ -183,3 +183,39 @@ def book_event(request, event_id):
 def about(request):
     return render(request, "main/static_pages/about.html")
 
+@business_required
+def create_event(request):
+    if request.method == "POST":
+
+        form = EventForm(request.POST)
+
+        if form.is_valid():
+
+            business = get_object_or_404(
+                Business,
+                account=request.session.get("accountId")
+            )
+
+            event = form.save(commit=False)
+            event.organiser = business
+            event.currentCapacity = 0
+            event.save()
+
+            for photo in request.FILES.getlist("photos"):
+                EventPhoto.objects.create(
+                    event=event,
+                    image=photo
+                )
+
+            messages.success(request, "Event created succesfully")
+            return redirect("event_detail", event_id=event.id)
+
+        return render(request, "main/business/create_event.html", {
+            "form": form,
+            "form_data": request.POST,
+        })
+
+    return render(request, "main/business/create_event.html", {
+        "form": EventForm(),
+        "form_data": {},
+    })

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from .models import Account, Customer, Business
+from .models import Account, Customer, Business, Event
 
 class LoginForm(forms.Form):
     email = forms.CharField(
@@ -84,3 +84,26 @@ class RegistrationForm(forms.ModelForm, type):
         if commit:
             account.save()
         return account
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = [
+            "title",
+            "description",
+            "maxCapacity",
+            "venue",
+            "venueAddress",
+            "date",
+        ]
+        widgets = {
+            "date": forms.DateTimeInput(
+                attrs={"type": "datetime-local"},
+                format="%Y-%m-%dT%H:%M"
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["date"].input_formats = ["%Y-%m-%dT%H:%M"]
