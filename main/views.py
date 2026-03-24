@@ -134,6 +134,16 @@ def event_detail(request, event_id):
     eventPhotos = EventPhoto.objects.filter(event=event)
 
 
+    avgRating = event.organiser.avgRating
+    reviewCount = event.organiser.reviewCount
+
+    if avgRating is None:
+        avgRating = 0
+
+    roundedRating = round(avgRating)
+    starDisplay = "★" * roundedRating + "☆" * (5 - roundedRating)
+
+
     daysUntilStart = 0
     if event.date:
         today = timezone.now().date()
@@ -156,6 +166,9 @@ def event_detail(request, event_id):
         "eventPhotos": eventPhotos,
         "daysUntilStart": daysUntilStart,
         "capacityPercent": capacityPercent,
+        "avgRating": avgRating,
+        "reviewCount": reviewCount,
+        "starDisplay": starDisplay,
     })
 
 @customer_required #Decorator handles checking if user logged in and is customer, if not logged in --> /login, if not customer --> /discover
