@@ -330,12 +330,11 @@
         <h1>{{ event.title }}</h1>
         <div class="byline">By {{ event.organiser.displayName }}</div>
 
-
         <div class="ratingrow" aria-label="rating">
-          <span class="stars" aria-hidden="true">★★★★☆</span>
-          <span class="ratingnum">{{ event.organiser.rating }}</span>
-          <span class="ratingcount">({{ event.organiser.reviewCount }})</span>
-      </div>
+          <span class="stars" aria-hidden="true">{{ starDisplay }}</span>
+          <span class="ratingnum">{{ avgRating|floatformat:1 }}</span>
+          <span class="ratingcount">({{ reviewCount }})</span>
+        </div>
     </section>
 
     <section class="mainsection">

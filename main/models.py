@@ -36,6 +36,10 @@ class Business(models.Model):
         result = Rates.objects.filter(businessId=self).aggregate(avg=Avg("rating"))
         return result["avg"]
     
+    @property
+    def reviewCount(self):
+        return Rates.objects.filter(businessId=self).count()
+    
     def __str__(self):
         return str(self.displayName or "Unnamed Business")
 
