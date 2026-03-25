@@ -1,11 +1,18 @@
      :root {
-      --accent: #005493;
-      --accent-dark: #004574;
-      --bg: #f6f8fb;
-      --text: #111;
-      --white: #ffffff;
-      --shadow: 0 8px 18px rgba(0,0,0,.10);
-      --max-width: 1100px;
+    --accent: #005493;
+    --accent-dark: #004574;
+    --bg: #f6f8fb;
+    --text: #111;
+    --white: #ffffff;
+    --shadow: 0 8px 18px rgba(0,0,0,.10);
+    --max-width: 1100px;
+    --muted: #444;
+    --light-muted: #666;
+    --card: #ffffff;
+    --accent-10: rgba(0, 84, 147, .10);
+    --accent-20: rgba(0, 84, 147, .20);
+    --radius: 16px;
+    --border: #cfcfcf;
     }
     html, body {
     margin: 0 !important;
