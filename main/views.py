@@ -168,6 +168,7 @@ def event_detail(request, event_id):
     
     show_rating_component = False
     existing_rating = None
+    has_booked = False
 
     if request.session.get("accountId") and request.session.get("accountType") == "customer":
         customer = Customer.objects.filter(accountId=request.session.get("accountId")).first()
@@ -198,6 +199,7 @@ def event_detail(request, event_id):
         "show_rating_component": show_rating_component,
         "existing_rating": existing_rating,
         "event_has_passed": event_has_passed,
+        "has_booked": has_booked,
     })
 
 
@@ -237,6 +239,37 @@ def book_event(request, event_id):
     except Exception:
         return JsonResponse({"success": False, "message": "Something went wrong."})
 
+@customer_required
+def unbook_event(request, event_id):
+    if request.method != "POST":
+        return redirect("event_detail", event_id=event_id)
+
+    event = get_object_or_404(Event, id=event_id)
+    customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
+
+    booking = Books.objects.filter(customerId=customer, eventId=event).first()
+
+    if not booking:
+        return JsonResponse({
+            "success": False,
+            "message": "You have not booked this event."
+        })
+
+    booking.delete()
+    event.refresh_from_db()
+
+    capacityPercent = 0
+    if event.maxCapacity > 0:
+        capacityPercent = int((event.currentCapacity / event.maxCapacity) * 100)
+
+    return JsonResponse({
+        "success": True,
+        "action": "unbooked",
+        "message": "Your booking has been cancelled.",
+        "currentCapacity": event.currentCapacity,
+        "maxCapacity": event.maxCapacity,
+        "capacityPercent": capacityPercent,
+    })
 def about(request):
     return render(request, "main/static_pages/about.html")
 
@@ -309,3 +342,5 @@ def rate_event(request, event_id):
 
     messages.success(request, "Rating submitted successfully.")
     return redirect("event_detail", event_id=event_id)
+
+
