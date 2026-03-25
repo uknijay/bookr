@@ -1,0 +1,16 @@
+ {% if show_rating_component %}
+            {% include "main/components/rating_component.html" %}
+{% elif event_has_passed %}
+    <div class="qi-actions">
+        <button type="button" class="btn btn-disabled btn-lg" disabled>Book</button>
+        <div class="qi-sub">This event has already passed</div>
+    </div>
+{% else %}
+    <div class="qi-actions">
+        <form id="bookForm" method="POST" action="{% url 'book_event' event.id %}">
+            {% csrf_token %}
+            <button type="submit" id="bookButton" class="btn btn-primary btn-lg">Book</button>
+        </form>
+        <div id="bookMessage" class="qi-sub">Booking is Instant</div>
+    </div>
+{% endif %}
