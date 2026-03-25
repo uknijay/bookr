@@ -2,7 +2,7 @@
 
 
 {% block title %}{{ event.title }}{% endblock %}
-{% load static %}
+
 
 {% load static %}
 {% block extra_head %}
@@ -414,7 +414,7 @@
               <div>
                 <div class="qi-title">Capacity</div>
                 <div class="qi-capacity">
-                  <div class="qi-text">{{ event.currentCapacity }}/{{ event.maxCapacity }}</div>
+                  <div class="qi-text" id="capacityText">{{ event.currentCapacity }}/{{ event.maxCapacity }}</div>
                 </div>
 
                 <div class="qi-progress">
@@ -441,11 +441,13 @@
             </div>
         {% else %}
           <div class="qi-actions">
-            <form method="POST" action="{% url 'book_event' event.id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-primary btn-lg">Book</button>
-            </form>
-            <div class="qi-sub">Booking is Instant</div>
+            <div class="qi-actions">
+                <form id="bookForm" method="POST" action="{% url 'book_event' event.id %}">
+                  {% csrf_token %}
+                  <button type="submit" id="bookButton" class="btn btn-primary btn-lg">Book</button>
+                </form>
+                <div id="bookMessage" class="qi-sub">Booking is Instant</div>
+              </div>
           </div>
         {% endif %}
 
@@ -471,6 +473,43 @@
         </div>
     </section>
   </main>
+
+  <script>
+
+    function bookEvent() {
+        var form = document.getElementById("bookForm");
+
+        var xhttp = new XMLHttpRequest();
+        var formData = new FormData(form);
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              
+                var response = JSON.parse(this.responseText);
+
+                document.getElementById("bookMessage").innerHTML = response.message;
+
+
+                if (response.success) {
+                    document.getElementById("bookButton").disabled = true;
+                    document.getElementById("bookButton").value = "Booked";
+
+                    document.getElementById("capacityText").innerHTML = response.currentCapacity + "/" + response.maxCapacity;
+
+                    document.getElementById("capacityBar").style.width = response.capacityPercent + "%";
+                }
+            }
+        };
+
+        xhttp.open("POST", form.action, true);
+        xhttp.send(formData);
+    }
+
+    document.getElementById("bookForm").onsubmit = function(event) {
+        event.preventDefault();
+        bookEvent();
+    };
+</script>
 
 
 {% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.db.models import Q
 from django.db import transaction
-
+from django.http import JsonResponse
 from .decorators import *
 from .forms import LoginForm, EventForm, RegistrationForm
 from .models import Event, Customer, Business
@@ -195,24 +195,38 @@ def event_detail(request, event_id):
 @customer_required #Decorator handles checking if user logged in and is customer, if not logged in --> /login, if not customer --> /discover
 def book_event(request, event_id):
     if request.method != "POST":
-        return redirect("event_detail", event_id=event_id)
+        return JsonResponse({"success": False, "message": "Invalid request."})
 
-    event =  get_object_or_404(Event, id=event_id)
+    event = get_object_or_404(Event, id=event_id)
     customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
 
     if Books.objects.filter(customerId=customer, eventId=event).exists():
-        messages.warning(request, "User already booked this event")
-        return redirect("event_detail", event_id=event_id)
+
+        return JsonResponse({"success" : False, "message": "You already booked this event"})
+
+    if event.currentCapacity >= event.maxCapacity:
+
+        return JsonResponse({"success" : False, "message": "This event is full"})
 
     try:
-        booking = Books(customerId=customer, eventId=event)
-        booking.save()
-        messages.success(request, "Booking created successfully.")
-        
-    except Exception as e:
-        messages.error(request, str(e))
+        Books.objects.create(customerId=customer, eventId=event)
 
-    return redirect("event_detail", event_id=event_id)
+        event.save()
+
+
+        capacityPercent = 0
+        if event.maxCapacity > 0:
+            capacityPercent = int((event.currentCapacity / event.maxCapacity) * 100)
+
+        return JsonResponse({
+            "success": True,
+            "message": "Booking created successfully.",
+            "currentCapacity": event.currentCapacity,
+            "maxCapacity": event.maxCapacity,
+            "capacityPercent": capacityPercent
+        })
+    except Exception:
+        return JsonResponse({"success": False, "message": "Something went wrong."})
 
 def about(request):
     return render(request, "main/static_pages/about.html")
