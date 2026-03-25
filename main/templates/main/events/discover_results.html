@@ -1,0 +1,12 @@
+<section class="discover-section">
+  
+    {% if request.GET.q or request.GET.location or request.GET.date %}
+        <h2>Results</h2>
+    {% else %}
+        <h2>Trending</h2>
+    {% endif %}
+
+    <div class="discover-gallery">
+        {% include "main/components/event_card_gallery.html" with events=events %}
+    </div>
+</section>
