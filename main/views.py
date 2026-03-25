@@ -92,30 +92,40 @@ def user_logout(request):
     request.session.flush()
     return redirect('discover')
 
+def register_choose(request):
+    if request.session.get('accountId'):
+        return redirect("discover")
+    return render(request, 'main/account/register_choose.html')
+
 def register_user(request, accountType):
     if request.session.get('accountId'):
         return redirect("discover")
-    
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            with transaction.atomic():
-                account = form.save()
-                username = form.cleaned_data.get('username')
 
-                if accountType == "business":
-                    Business.objects.create(account=account, displayName=username)
-                else:
-                    Customer.objects.create(account=account, name=username)
+    if accountType not in ("customer", "business"):
+        return redirect("register_choose")
+
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST, accountType=accountType)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    account = form.save()
+                    username = form.cleaned_data.get('username')
+
+                    if accountType == "business":
+                        Business.objects.create(account=account, displayName=username)
+                    else:
+                        Customer.objects.create(accountId=account, name=username)
 
                 request.session["accountId"] = account.id
                 request.session["accountType"] = account.accountType
                 request.session["accountEmail"] = account.email
 
                 return redirect('discover')
-
+            except Exception:
+                form.add_error('email', 'An account with this email already exists.')
     else:
-        form = RegistrationForm()
+        form = RegistrationForm(accountType=accountType)
 
     return render(request, 'main/account/register.html', {'form': form, 'accountType': accountType})
 
