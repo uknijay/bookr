@@ -203,6 +203,24 @@
       background-color: var(--accent);
     }
 
+    .qi-actions .btn-unbook.btn-lg{
+      width: 100%;
+      border: 0;
+      background: #dc3545;
+      color: #ffffff;
+      padding: 14px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: 0 10px 18px rgba(220,53,69,.18);
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .qi-actions .btn-unbook.btn-lg:hover {
+      background: #bb2d3b;
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+    }
+
 
     .titleblock h1{
       margin: 0;
@@ -419,7 +437,7 @@
 
                 <div class="qi-progress">
                   <div class="progress" role="progressbar" aria-label="Capacity" aria-valuenow="{{ capacityPercent }}" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: {{ capacityPercent }}%"></div>
+                    <div id="capacityBar" class="progress-bar" style="width: {{ capacityPercent }}%"></div>
                   </div>
                   {% if event_has_passed %}
                   <div class="qi-footnote"> This event has already passed</div>
@@ -432,24 +450,7 @@
         </div>
         </div>
 
-        {% if show_rating_component %}
-            {% include "main/components/rating_component.html" %}
-        {% elif event_has_passed %}
-            <div class="qi-actions">
-              <button type="button" class="btn btn-disabled btn-lg" disabled>Book</button>
-              <div class="qi-sub">This event has already passed</div>
-            </div>
-        {% else %}
-          <div class="qi-actions">
-            <div class="qi-actions">
-                <form id="bookForm" method="POST" action="{% url 'book_event' event.id %}">
-                  {% csrf_token %}
-                  <button type="submit" id="bookButton" class="btn btn-primary btn-lg">Book</button>
-                </form>
-                <div id="bookMessage" class="qi-sub">Booking is Instant</div>
-              </div>
-          </div>
-        {% endif %}
+       {% include "main/components/event_action_component.html" %}
 
       </aside>
     </section>
@@ -505,10 +506,49 @@
         xhttp.send(formData);
     }
 
-    document.getElementById("bookForm").onsubmit = function(event) {
-        event.preventDefault();
-        bookEvent();
-    };
+    function unbookEvent() {
+        var form = document.getElementById("unbookForm");
+
+        var xhttp = new XMLHttpRequest();
+        var formData = new FormData(form);
+
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var response = JSON.parse(this.responseText);
+
+                document.getElementById("unbookMessage").innerHTML = response.message;
+
+                if (response.success) {
+                    document.getElementById("unbookButton").innerHTML = "Unbooked";
+                    document.getElementById("unbookButton").disabled = true;
+
+                    document.getElementById("capacityText").innerHTML =
+                        response.currentCapacity + "/" + response.maxCapacity;
+
+                    document.getElementById("capacityBar").style.width =
+                        response.capacityPercent + "%";
+                }
+            }
+        };
+
+        xhttp.open("POST", form.action, true);
+        xhttp.send(formData);
+    }
+
+    var bookForm = document.getElementById("bookForm");
+    if (bookForm) {
+        bookForm.onsubmit = function(event) {
+            event.preventDefault();
+            bookEvent();
+        };
+    }
+    var unbookForm = document.getElementById("unbookForm");
+    if (unbookForm) {
+        unbookForm.onsubmit = function(event) {
+            event.preventDefault();
+            unbookEvent();
+        };
+    }
 </script>
 
 
