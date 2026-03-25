@@ -9,9 +9,13 @@ from .decorators import *
 from .forms import LoginForm, EventForm, RegistrationForm
 from .models import Event, Customer, Business
 from main.models import EventPhoto, Account, Books, Rates
+from django.shortcuts import render
+from django.db.models import Q
 
 ## NOTE: Look at /decorators.py, can use these to check if user is logged in and allow only logged in user to access view. 
 ##       This is good for like "create event", "rate business", "book event" etc, 
+
+
 
 
 
@@ -36,14 +40,19 @@ def discover(request):
             Q(venueAddress__icontains=location)
         )
 
-    if date:
+    if date != "":
         events = events.filter(date__date=date)
 
     events = events.order_by("date")
 
-    return render(request, "main/events/discover.html", {
+    context = {
         "events": events,
-    })
+    }
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "main/events/_discover_results.html" , context)
+
+    return render(request, "main/events/discover.html", context)
 
 def about(request):
     return render(request, "main/static_pages/about.html")

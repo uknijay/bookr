@@ -68,14 +68,38 @@
   <hr class="discover-divider">
 
   <section class="discover-section">
-    {% if request.GET.q or request.GET.location or request.GET.date %}
-      <h2>Results</h2>
-    {% else %}
-      <h2>Trending</h2>
-    {% endif %}
-    <div class="discover-gallery">
-      {% include "main/components/event_card_gallery.html" with events=events %}
+    <div id="discover-results">
+      {% include "main/events/discover_results.html" %}
     </div>
   </section>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#discover-search-form").on("submit", function (e) {
+      e.preventDefault();
+
+      const form = $(this);
+      const url = form.attr("action");
+      const data = form.serialize();
+
+      $.ajax({
+        url: url,
+        type: "GET",
+        data: data,
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        success: function (response) {
+          $("#discover-results").html(response);
+
+        },
+        error: function () {
+          alert("Search failed | Please try again.");
+        }
+      });
+    });
+  });
+</script>
+
 {% endblock %}
