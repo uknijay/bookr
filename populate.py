@@ -717,9 +717,14 @@ ratingData = [
 
 
 #Get images from Picsum
-def addPicsumImages(event, count=3):
+
+def addSampleImages(event, count=3):
     for i in range(1, count + 1):
-        imageUrl = f"https://picsum.photos/seed/{event.id}-{i}/800/500"
+        imageNumber = ((event.id * 10) + i) % 2000
+        if imageNumber == 0:
+            imageNumber = 2000
+
+        imageUrl = f"https://yavuzceliker.github.io/sample-images/image-{imageNumber}.jpg"
         response = requests.get(imageUrl)
 
         if response.status_code == 200:
@@ -775,6 +780,7 @@ def populate():
             )
         
         businesses[b["email"]] = Business.objects.create(account=acc, displayName=b["displayName"])
+        print("Added business:", businesses[b["email"]].displayName)
 
 
     customers = {}
@@ -786,6 +792,8 @@ def populate():
             )
         
         customers[c["email"]] = Customer.objects.create(accountId=acc, name=c["name"])
+
+        print("Added customer:", customers[c["email"]].name)
 
 
     events = {}
@@ -803,7 +811,8 @@ def populate():
 
         events[e["title"]] = event
 
-        addPicsumImages(event, 3)
+        addSampleImages(event, 3)
+        print("Added event:", event.title)
 
     for customerEmail, eventTitle in bookingData:
         
@@ -811,6 +820,7 @@ def populate():
         booking = Books(customerId=customers[customerEmail], eventId=event)
         booking.save()
         event.save()
+        print("Added booking:", customers[customerEmail].name, "->", event.title)
 
     for customerEmail, businessEmail, rating in ratingData:
         Rates.objects.create(
@@ -818,6 +828,7 @@ def populate():
             businessId=businesses[businessEmail],
             rating=rating,
         )
+        print("Added rating:", customers[customerEmail].name, "->", businesses[businessEmail].displayName, ":", rating)
 
 
 if __name__ == "__main__":
