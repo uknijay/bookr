@@ -360,10 +360,14 @@ def my_bookings(request):
     now = timezone.now()
 
     booked_event_ids = Books.objects.filter(customerId=customer).values_list("eventId_id", flat=True)
-    upcoming_events = Event.objects.filter(id__in=booked_event_ids, date__gte=now).order_by("date")
+
+    upcoming_events = Event.objects.filter( id__in=booked_event_ids, date__gte=now).order_by("date")
+
     past_events = Event.objects.filter(id__in=booked_event_ids, date__lt=now).order_by("-date")
-    rated_business_ids = Rates.objects.filter(customerId=customer).values_list("businessId_id", flat=True)
-    rated_events = Event.objects.filter(id__in=booked_event_ids, date__lt=now, organiser_id__in=rated_business_ids).order_by("-date")
+
+    rated_business_ids = Rates.objects.filter( customerId=customer).values_list("businessId_id", flat=True)
+
+    rated_events = Event.objects.filter( id__in=booked_event_ids,date__lt=now,organiser_id__in=rated_business_ids).order_by("-date")
 
     return render(request, "main/bookings/my_bookings.html", {
         "customer": customer,

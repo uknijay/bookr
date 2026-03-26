@@ -25,7 +25,7 @@
   <header class="site-header">
     <div class="site-header-inner">
       <a href="{% url 'discover' %}" class="site-logo">
-        <img src="/media/bookr_logo.png" alt="Bookr logo">
+        <img src="{% static 'main/images/bookr_logo.png' %}" alt="Bookr logo">
       </a>
 
       <nav class="site-nav">
@@ -38,6 +38,7 @@
             <a href="{% url 'create_event' %}">Create Event</a>
             <a href="{% url 'business_view_ratings' %}">My Ratings</a>
           {% else %}
+          {% if request.session.accountType == "customer" %}
             <a href="{% url 'my_bookings' %}">My Bookings</a>
           {% endif %}
           <a href="{% url 'logout' %}">Log out</a>
