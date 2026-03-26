@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!-- Inter Font-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icon and CSS-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>View Ratings | Bookr</title>
+
+  <style>
+    :root{
+      --max-width: 1100px;
+      --text: #111;
+      --muted: #444;
+      --light-muted: #666;
+      --border: #cfcfcf;
+      --radius: 16px;
+      --shadow: 0 10px 24px rgba(0,0,0,.08);
+      --accent: #005493;
+      --accent-10: rgba(0, 84, 147, .10);
+      --accent-20: rgba(0, 84, 147, .20);
+      --bg: #f6f8fb;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .topbar{
+      height: 64px;
+      background: var(--accent);
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      justify-content: space-between;
+    }
+
+    .topbar-logo{
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .topbar-user{
+      color: rgba(255,255,255,.85);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-user:hover{ color: #fff; }
+
+    .page{
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 28px 24px;
+    }
+
+    /* ── Page header ── */
+    .page-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .page-header h1{
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Stats row ── */
+    .stats-row{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stat-label{
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--light-muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-value{
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-meta{
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .stat-stars{
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    /* ── Section labels ── */
+    .section-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-header h2{
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* ── Ratings grid ── */
+    .ratings-grid{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    /* ── Rating card ── */
+    .rating-card{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .rating-card-header{
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rating-event-title{
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .rating-date{
+      font-size: 11px;
+      color: var(--light-muted);
+    }
+
+    .rating-card-body{
+      padding: 14px 16px;
+    }
+
+    .rating-summary{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .avg-rating-box{
+      text-align: center;
+    }
+
+    .avg-rating-number{
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .avg-rating-stars{
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .rating-count{
+      font-size: 12px;
+      color: var(--light-muted);
+    }
+
+    .rating-breakdown{
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    .breakdown-row{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .breakdown-stars{
+      width: 50px;
+      color: var(--accent);
+    }
+
+    .breakdown-bar{
+      flex: 1;
+      height: 6px;
+      background-color: var(--accent-20);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .breakdown-fill{
+      height: 100%;
+      background-color: var(--accent);
+      border-radius: 999px;
+    }
+
+    .breakdown-percent{
+      width: 35px;
+      text-align: right;
+      color: var(--muted);
+    }
+
+    .recent-reviews{
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+
+    .recent-reviews h4{
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      color: var(--muted);
+    }
+
+    .review-item{
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,.04);
+    }
+
+    .review-item:last-child{
+      border-bottom: 0;
+    }
+
+    .review-header{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .review-stars{
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .reviewer-name{
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .review-date{
+      font-size: 10px;
+      color: var(--light-muted);
+    }
+
+    .review-comment{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .btn-stats{
+      background: var(--accent-10);
+      color: var(--accent);
+      text-align: center;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity .15s;
+    }
+
+    .btn-stats:hover{ opacity: .85; }
+
+    /* Empty state */
+    .empty-state{
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card);
+      border-radius: var(--radius);
+      color: var(--light-muted);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+
+    .empty-state i{
+      font-size: 64px;
+      margin-bottom: 16px;
+      color: var(--accent-20);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1080px){
+      .stats-row{ grid-template-columns: repeat(2, 1fr); }
+      .ratings-grid{ grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px){
+      .stats-row{ grid-template-columns: 1fr 1fr; }
+      .page-header h1{ font-size: 24px; }
+      .rating-summary{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .rating-breakdown{
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="topbar">
+    <a href="/home" class="topbar-logo">Bookr</a>
+    <a href="/business-account" class="topbar-user">
+      <i class="bi bi-person-circle"></i> {{ business.displayName }}
+    </a>
+  </div>
+
+  <main class="page">
+
+    <div class="page-header">
+      <h1>View Ratings</h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+
+      <div class="stat-card">
+        <div class="stat-label">Overall Rating</div>
+        <div class="stat-value">{{ business.avgRating }}</div>
+        <div class="stat-meta">
+          <span class="stat-stars">{{ business.starDisplay }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Total Reviews</div>
+        <div class="stat-value">{{ totalReviews }}</div>
+        <div class="stat-meta">from all events</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">5-Star Reviews</div>
+        <div class="stat-value">{{ fiveStarPercent }}%</div>
+        <div class="stat-meta">{{ fiveStarCount }} reviews</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Events Rated</div>
+        <div class="stat-value">{{ ratedEventsCount }}</div>
+        <div class="stat-meta">out of {{ totalEvents }} events</div>
+      </div>
+
+    </div>
+
+    <!-- Ratings by Event -->
+    <div class="section-header">
+      <h2>Ratings by event</h2>
+    </div>
+
+    <div class="ratings-grid">
+      {% for event in ratedEvents %}
+      <div class="rating-card">
+        <div class="rating-card-header">
+          <div>
+            <div class="rating-event-title">{{ event.title }}</div>
+            <div class="rating-date">{{ event.date }}</div>
+          </div>
+          <a href="/business-account/my-events/{{ event.id }}/stats" class="btn-stats">View Details</a>
+        </div>
+
+        <div class="rating-card-body">
+          <div class="rating-summary">
+            <div class="avg-rating-box">
+              <div class="avg-rating-number">{{ event.avgRating }}</div>
+              <div class="avg-rating-stars">{{ event.starDisplay }}</div>
+              <div class="rating-count">{{ event.ratingCount }} reviews</div>
+            </div>
+            <div class="rating-breakdown">
+              {% for breakdown in event.ratingBreakdown %}
+              <div class="breakdown-row">
+                <span class="breakdown-stars">{{ breakdown.stars }} ★</span>
+                <div class="breakdown-bar">
+                  <div class="breakdown-fill" style="width: {{ breakdown.percent }}%"></div>
+                </div>
+                <span class="breakdown-percent">{{ breakdown.percent }}%</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="recent-reviews">
+            <h4>Recent reviews</h4>
+            {% for review in event.recentReviews %}
+            <div class="review-item">
+              <div class="review-header">
+                <span class="review-stars">{{ review.starDisplay }}</span>
+                <span class="reviewer-name">{{ review.customerName }}</span>
+                <span class="review-date">{{ review.date }}</span>
+              </div>
+              <div class="review-comment">{{ review.comment }}</div>
+            </div>
+            {% empty %}
+            <div class="review-item">
+              <div class="review-comment" style="color: var(--light-muted);">No reviews yet</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="bi bi-star"></i>
+        <p>No rated events yet</p>
+        <p style="font-size: 14px;">When customers rate your events, they'll appear here</p>
+      </div>
+      {% endfor %}
+    </div>
+
+  </main>
+
+  <!-- Bootstrap-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

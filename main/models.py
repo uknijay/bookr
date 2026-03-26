@@ -73,6 +73,50 @@ class Event(models.Model):
         related_name="organised_events",
     )
 
+    @property
+    def capacityPercent(self):
+        if self.maxCapacity and self.maxCapacity > 0:
+            pct = int((self.currentCapacity / self.maxCapacity) * 100)
+            return max(0, min(100, pct))
+        return 0
+
+    @property
+    def first_photo(self):
+        return self.photos.first()
+
+    @property
+    def totalBookings(self):
+        return Books.objects.filter(eventId=self).count()
+
+    @property
+    def avgRating(self):
+        if self.organiser:
+            return self.organiser.avgRating
+        return None
+
+    @property
+    def ratingCount(self):
+        if self.organiser:
+            return Rates.objects.filter(businessId=self.organiser).count()
+        return 0
+
+    @property
+    def location(self):
+        if self.venue and self.venueAddress:
+            return f"{self.venue}, {self.venueAddress}"
+        return self.venue or self.venueAddress or "No location"
+
+    @property
+    def time(self):
+        return self.date.strftime('%H:%M') if self.date else ''
+
+    @property
+    def daysUntil(self):
+        if self.date:
+            delta = self.date - timezone.now()
+            return max(0, delta.days)
+        return 0
+
     def __str__(self):
         return self.title
 

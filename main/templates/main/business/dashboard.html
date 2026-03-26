@@ -1,0 +1,748 @@
+<!--Make a basic customer account seciton using the event card and event grid components-->
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!-- Inter Font-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icon and CSS-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard | Bookr</title>
+
+  <style>
+    :root{
+      --max-width: 1400px;
+      --text: #111;
+      --muted: #444;
+      --light-muted: #666;
+      --border: #cfcfcf;
+      --radius: 16px;
+      --shadow: 0 10px 24px rgba(0,0,0,.08);
+      --accent: #005493;
+      --accent-10: rgba(0, 84, 147, .10);
+      --accent-20: rgba(0, 84, 147, .20);
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .topbar{
+      height: 64px;
+      background: var(--accent);
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo{
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .topbar-nav{
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .topbar-nav a{
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .topbar-nav a:hover,
+    .topbar-nav a.active{
+      color: #fff;
+    }
+
+    .topbar-user{
+      color: rgba(255,255,255,.85);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-user:hover{ color: #fff; }
+
+    .page{
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 28px 24px;
+    }
+
+    /* ── Welcome Section ── */
+    .welcome-section{
+      background: linear-gradient(135deg, var(--accent) 0%, #0077be 100%);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 32px;
+      color: white;
+    }
+
+    .welcome-section h1{
+      margin: 0 0 8px 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .welcome-section p{
+      margin: 0;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    /* ── Stats Row ── */
+    .stats-row{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover{
+      transform: translateY(-2px);
+    }
+
+    .stat-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .stat-header i{
+      font-size: 32px;
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    .stat-label{
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--light-muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .stat-value{
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-change{
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-change.positive{ color: var(--success); }
+    .stat-change.negative{ color: var(--danger); }
+
+    /* ── Quick Actions ── */
+    .quick-actions{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+
+    .quick-actions h3{
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .actions-grid{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .action-btn i{
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .action-btn:hover{
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .action-btn:hover i{
+      color: white;
+    }
+
+    /* ── Main Grid ── */
+    .dashboard-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    /* ── Card Common ── */
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header{
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h3{
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .card-header a{
+      font-size: 13px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .card-body{
+      padding: 20px;
+    }
+
+    /* ── Upcoming Events List ── */
+    .event-list{
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .event-item{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .event-image{
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: var(--bg);
+    }
+
+    .event-info{
+      flex: 1;
+    }
+
+    .event-title{
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .event-date{
+      font-size: 12px;
+      color: var(--light-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-capacity{
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .event-status{
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .event-status.soon{
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .event-status.active{
+      background: #e0f2fe;
+      color: #0284c7;
+    }
+
+    /* ── Recent Bookings ── */
+    .bookings-list{
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .booking-item{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+
+    .booking-item:last-child{
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .booking-info{
+      flex: 1;
+    }
+
+    .booking-event{
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .booking-customer{
+      font-size: 12px;
+      color: var(--light-muted);
+    }
+
+    .booking-details{
+      text-align: right;
+    }
+
+    .booking-date{
+      font-size: 11px;
+      color: var(--light-muted);
+    }
+
+    .booking-tickets{
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ── Ratings Overview ── */
+    .ratings-summary{
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .overall-rating{
+      text-align: center;
+    }
+
+    .rating-number{
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .rating-stars{
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+
+    .rating-count{
+      font-size: 12px;
+      color: var(--light-muted);
+    }
+
+    .rating-breakdown{
+      flex: 1;
+    }
+
+    .breakdown-row{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .breakdown-stars{
+      width: 45px;
+      color: var(--accent);
+    }
+
+    .breakdown-bar{
+      flex: 1;
+      height: 6px;
+      background-color: var(--accent-20);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .breakdown-fill{
+      height: 100%;
+      background-color: var(--accent);
+      border-radius: 999px;
+    }
+
+    .breakdown-percent{
+      width: 35px;
+      text-align: right;
+      color: var(--muted);
+    }
+
+    .recent-review{
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+
+    .review-text{
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .review-meta{
+      font-size: 11px;
+      color: var(--light-muted);
+      display: flex;
+      gap: 12px;
+    }
+
+    /* ── Performance Chart Placeholder ── */
+    .chart-placeholder{
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: var(--light-muted);
+    }
+
+    .chart-placeholder i{
+      font-size: 48px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1080px){
+      .stats-row{
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .dashboard-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px){
+      .stats-row{
+        grid-template-columns: 1fr;
+      }
+      .topbar-nav{
+        display: none;
+      }
+      .welcome-section h1{
+        font-size: 22px;
+      }
+      .ratings-summary{
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="topbar">
+    <a href="/dashboard" class="topbar-logo">Bookr</a>
+    <div class="topbar-nav">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/business-account/my-events">My Events</a>
+      <a href="/business-account/view-ratings">Ratings</a>
+    </div>
+    <a href="/business-account" class="topbar-user">
+      <i class="bi bi-person-circle"></i> {{ business.displayName }}
+    </a>
+  </div>
+
+  <main class="page">
+
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h1>Welcome back, {{ business.displayName }}! 👋</h1>
+      <p>Here's what's happening with your events today.</p>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Total Events</span>
+          <i class="bi bi-calendar-event"></i>
+        </div>
+        <div class="stat-value">{{ totalEvents }}</div>
+        <div class="stat-change {% if eventGrowth > 0 %}positive{% else %}negative{% endif %}">
+          <i class="bi bi-arrow-{{ 'up' if eventGrowth > 0 else 'down' }}"></i>
+          {{ eventGrowth }} from last month
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Total Bookings</span>
+          <i class="bi bi-ticket-perforated"></i>
+        </div>
+        <div class="stat-value">{{ totalBookings }}</div>
+        <div class="stat-change positive">
+          <i class="bi bi-arrow-up"></i> {{ bookingsGrowth }}% this month
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Average Rating</span>
+          <i class="bi bi-star-fill"></i>
+        </div>
+        <div class="stat-value">{{ business.avgRating }}</div>
+        <div class="stat-stars" style="font-size: 12px;">{{ business.starDisplay }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Revenue</span>
+          <i class="bi bi-currency-pound"></i>
+        </div>
+        <div class="stat-value">£{{ totalRevenue }}</div>
+        <div class="stat-change positive">
+          <i class="bi bi-arrow-up"></i> {{ revenueGrowth }}% this month
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="actions-grid">
+        <a href="/business-account/my-events/create-event" class="action-btn">
+          <i class="bi bi-plus-circle"></i> Create Event
+        </a>
+        <a href="/business-account/my-events" class="action-btn">
+          <i class="bi bi-calendar-check"></i> Manage Events
+        </a>
+        <a href="/business-account/view-ratings" class="action-btn">
+          <i class="bi bi-star"></i> View Ratings
+        </a>
+        <a href="/business-account/my-events/upcoming" class="action-btn">
+          <i class="bi bi-graph-up"></i> View Analytics
+        </a>
+      </div>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- Upcoming Events -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Upcoming Events</h3>
+          <a href="/business-account/my-events">View all →</a>
+        </div>
+        <div class="card-body">
+          <div class="event-list">
+            {% for event in upcomingEvents %}
+            <div class="event-item">
+              {% if event.first_photo %}
+                <img class="event-image" src="{{ event.first_photo.image.url }}" alt="{{ event.title }}">
+              {% else %}
+                <div class="event-image" style="background: var(--accent-20);"></div>
+              {% endif %}
+              <div class="event-info">
+                <div class="event-title">{{ event.title }}</div>
+                <div class="event-date">
+                  <i class="bi bi-calendar3"></i> {{ event.date }} at {{ event.time }}
+                </div>
+                <div class="event-capacity">{{ event.currentCapacity }}/{{ event.maxCapacity }} spots booked</div>
+              </div>
+              <div class="event-status {% if event.daysUntil <= 7 %}soon{% else %}active{% endif %}">
+                {% if event.daysUntil <= 7 %}Soon{% else %}Active{% endif %}
+              </div>
+            </div>
+            {% empty %}
+            <div style="text-align: center; color: var(--light-muted); padding: 40px;">
+              <i class="bi bi-calendar-x" style="font-size: 48px;"></i>
+              <p>No upcoming events</p>
+              <a href="/business-account/my-events/create-event" style="color: var(--accent);">Create your first event →</a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Bookings -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Recent Bookings</h3>
+          <a href="/business-account/my-events">View all →</a>
+        </div>
+        <div class="card-body">
+          <div class="bookings-list">
+            {% for booking in recentBookings %}
+            <div class="booking-item">
+              <div class="booking-info">
+                <div class="booking-event">{{ booking.eventTitle }}</div>
+                <div class="booking-customer">
+                  <i class="bi bi-person"></i> {{ booking.customerName }}
+                </div>
+              </div>
+              <div class="booking-details">
+                <div class="booking-tickets">{{ booking.tickets }} ticket(s)</div>
+                <div class="booking-date">{{ booking.date }}</div>
+              </div>
+            </div>
+            {% empty %}
+            <div style="text-align: center; color: var(--light-muted); padding: 40px;">
+              <i class="bi bi-inbox" style="font-size: 48px;"></i>
+              <p>No recent bookings</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Ratings Overview -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Ratings Overview</h3>
+          <a href="/business-account/view-ratings">View details →</a>
+        </div>
+        <div class="card-body">
+          <div class="ratings-summary">
+            <div class="overall-rating">
+              <div class="rating-number">{{ business.avgRating }}</div>
+              <div class="rating-stars">{{ business.starDisplay }}</div>
+              <div class="rating-count">{{ totalReviews }} reviews</div>
+            </div>
+            <div class="rating-breakdown">
+              {% for breakdown in ratingBreakdown %}
+              <div class="breakdown-row">
+                <span class="breakdown-stars">{{ breakdown.stars }} ★</span>
+                <div class="breakdown-bar">
+                  <div class="breakdown-fill" style="width: {{ breakdown.percent }}%"></div>
+                </div>
+                <span class="breakdown-percent">{{ breakdown.percent }}%</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          
+          {% if recentReview %}
+          <div class="recent-review">
+            <div class="review-text">"{{ recentReview.comment }}"</div>
+            <div class="review-meta">
+              <span>{{ recentReview.customerName }}</span>
+              <span>{{ recentReview.eventTitle }}</span>
+              <span>{{ recentReview.date }}</span>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Performance Chart (Placeholder) -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Booking Performance</h3>
+          <a href="/business-account/my-events/stats">View analytics →</a>
+        </div>
+        <div class="card-body">
+          <div class="chart-placeholder">
+            <i class="bi bi-graph-up"></i>
+            <p>Last 30 days: {{ monthlyBookings }} bookings</p>
+            <p style="font-size: 12px;">+{{ monthlyGrowth }}% from previous month</p>
+          </div>
+          <div style="margin-top: 16px;">
+            <div class="breakdown-row">
+              <span>Most booked event:</span>
+              <strong>{{ topEvent.title }}</strong>
+              <span style="margin-left: auto;">{{ topEvent.bookings }} bookings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bootstrap-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

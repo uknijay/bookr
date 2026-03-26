@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <!-- Inter Font-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icon and CSS-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Ratings | Bookr</title>
+
+  <style>
+    :root{
+      --max-width: 1100px;
+      --text: #111;
+      --muted: #444;
+      --light-muted: #666;
+      --border: #cfcfcf;
+      --radius: 16px;
+      --shadow: 0 10px 24px rgba(0,0,0,.08);
+      --accent: #005493;
+      --accent-10: rgba(0, 84, 147, .10);
+      --accent-20: rgba(0, 84, 147, .20);
+      --bg: #f6f8fb;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .topbar{
+      height: 64px;
+      background: var(--accent);
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      justify-content: space-between;
+    }
+
+    .topbar-logo{
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .topbar-user{
+      color: rgba(255,255,255,.85);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .topbar-user:hover{ color: #fff; }
+
+    .page{
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 28px 24px;
+    }
+
+    /* ── Page header ── */
+    .page-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .page-header h1{
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .btn-back{
+      background: var(--card);
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-block;
+      transition: box-shadow 0.2s;
+    }
+
+    .btn-back:hover{
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Stats row ── */
+    .stats-row{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-label{
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--light-muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value{
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-stars{
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    /* ── Section headers ── */
+    .section-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-header h2{
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* ── Ratings grid ── */
+    .ratings-grid{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    /* ── Rating card ── */
+    .rating-card{
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .rating-card-img{
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      background: #e2e8f0;
+    }
+
+    .rating-card-body{
+      padding: 14px;
+    }
+
+    .rating-event-title{
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .rating-organizer{
+      font-size: 12px;
+      color: var(--light-muted);
+      margin-bottom: 10px;
+    }
+
+    .rating-date{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rating-stars{
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .rating-value{
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-left: 6px;
+    }
+
+    .rating-comment{
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+
+    .edit-rating{
+      margin-top: 12px;
+      text-align: right;
+    }
+
+    .edit-rating a{
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .edit-rating a:hover{
+      text-decoration: underline;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1080px){
+      .stats-row{
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .ratings-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px){
+      .stats-row{
+        grid-template-columns: 1fr;
+      }
+      .page-header h1{
+        font-size: 24px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="topbar">
+    <a href="/home" class="topbar-logo">Bookr</a>
+    <a href="/customer-account" class="topbar-user">
+      <i class="bi bi-person-circle"></i> {{ customer.displayName }}
+    </a>
+  </div>
+
+  <main class="page">
+
+    <div class="page-header">
+      <h1>My Ratings</h1>
+      <a href="/customer-account" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Back
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Ratings</div>
+        <div class="stat-value">{{ totalRatings }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Average Rating</div>
+        <div class="stat-value">{{ avgRating }}</div>
+        <div class="stat-stars">{{ starDisplay }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Events Rated</div>
+        <div class="stat-value">{{ ratedEvents }}</div>
+      </div>
+    </div>
+
+    <!-- My Ratings -->
+    <div class="section-header">
+      <h2>My Ratings</h2>
+    </div>
+
+    <div class="ratings-grid">
+      {% for rating in ratings %}
+      <div class="rating-card">
+        {% if rating.eventImage %}
+          <img class="rating-card-img" src="{{ rating.eventImage }}" alt="{{ rating.eventTitle }}">
+        {% else %}
+          <div class="rating-card-img"></div>
+        {% endif %}
+
+        <div class="rating-card-body">
+          <div class="rating-event-title">{{ rating.eventTitle }}</div>
+          <div class="rating-organizer">{{ rating.organizer }}</div>
+          <div class="rating-date">
+            <i class="bi bi-calendar3"></i> {{ rating.eventDate }}
+          </div>
+          <div class="rating-stars">
+            {{ rating.starDisplay }}
+            <span class="rating-value">{{ rating.ratingValue }} ★</span>
+          </div>
+          {% if rating.comment %}
+          <div class="rating-comment">
+            "{{ rating.comment }}"
+          </div>
+          {% endif %}
+          <div class="edit-rating">
+            <a href="/customer-account/my-ratings/edit/{{ rating.id }}">Edit Rating</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px; background: var(--card); border-radius: var(--radius);">
+        <i class="bi bi-star" style="font-size: 48px; color: var(--light-muted);"></i>
+        <p style="margin-top: 16px; color: var(--light-muted);">You haven't rated any events yet</p>
+        <a href="/customer-account/my-bookings/past-events" style="color: var(--accent); text-decoration: none;">Rate past events →</a>
+      </div>
+      {% endfor %}
+    </div>
+
+  </main>
+
+  <!-- Bootstrap-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -13,7 +13,7 @@
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Past Events</title>
+  <title>Past Events | Bookr</title>
 
   <style>
     :root{
@@ -90,61 +90,25 @@
       letter-spacing: -0.5px;
     }
 
-    /* ── Stats row ── */
-    .stats-row{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .stat-card{
+    .btn-back{
       background: var(--card);
-      border: 1px solid rgba(0,0,0,.06);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-    }
-
-    .stat-label{
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--light-muted);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      margin-bottom: 6px;
-    }
-
-    .stat-value{
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .stat-meta{
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .stat-stars{
       color: var(--accent);
-      letter-spacing: 2px;
-    }
-
-    .stat-progress .progress{
-      height: 8px;
-      background-color: var(--accent-20);
+      border: 1px solid var(--border);
+      padding: 8px 20px;
       border-radius: 999px;
-      overflow: hidden;
-      margin-top: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-block;
+      transition: box-shadow 0.2s;
     }
 
-    .stat-progress .progress-bar{
-      background-color: var(--accent);
+    .btn-back:hover{
+      box-shadow: var(--shadow);
     }
 
-    /* ── Section labels ── */
+    /* ── Section headers ── */
     .section-header{
       display: flex;
       align-items: center;
@@ -203,53 +167,6 @@
       line-height: 1.6;
     }
 
-    .card-cap-row{
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .card-progress .progress{
-      height: 6px;
-      background-color: var(--accent-20);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .card-progress .progress-bar{
-      background-color: var(--accent);
-    }
-
-    .event-card-actions{
-      display: flex;
-      gap: 8px;
-      padding: 10px 14px 14px;
-    }
-
-    .btn-card{
-      flex: 1;
-      text-align: center;
-      padding: 7px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      text-decoration: none;
-      border: 0;
-      transition: opacity .15s;
-    }
-
-    .btn-card:hover{ opacity: .85; }
-
-    .btn-stats{
-      background: var(--accent-10);
-      color: var(--accent);
-    }
-
-    /* Past card rating row */
     .past-card-rating{
       padding: 8px 14px 12px;
       font-size: 13px;
@@ -269,12 +186,10 @@
 
     /* ── Responsive ── */
     @media (max-width: 1080px){
-      .stats-row{ grid-template-columns: repeat(2, 1fr); }
       .events-grid{ grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 600px){
-      .stats-row{ grid-template-columns: 1fr 1fr; }
       .events-grid{ grid-template-columns: 1fr; }
       .page-header h1{ font-size: 24px; }
     }
@@ -285,8 +200,8 @@
 <body>
   <div class="topbar">
     <a href="/home" class="topbar-logo">Bookr</a>
-    <a href="/business-account" class="topbar-user">
-      <i class="bi bi-person-circle"></i> {{ business.displayName }}
+    <a href="/customer-account" class="topbar-user">
+      <i class="bi bi-person-circle"></i> {{ customer.displayName }}
     </a>
   </div>
 
@@ -294,54 +209,21 @@
 
     <div class="page-header">
       <h1>Past Events</h1>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-row">
-
-      <div class="stat-card">
-        <div class="stat-label">Past Events</div>
-        <div class="stat-value">{{ pastEventCount }}</div>
-        <div class="stat-meta">completed events</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Total Bookings</div>
-        <div class="stat-value">{{ totalBookings }}</div>
-        <div class="stat-meta">all time</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Average Rating</div>
-        <div class="stat-value">{{ business.avgRating }}</div>
-        <div class="stat-meta">
-          <span class="stat-stars">★★★★☆</span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Total Attendees</div>
-        <div class="stat-value">{{ totalAttendees }}</div>
-        <div class="stat-progress">
-          <div class="progress" role="progressbar" aria-valuenow="{{ attendancePercent }}" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar" style="width: {{ attendancePercent }}%"></div>
-          </div>
-        </div>
-        <div class="stat-meta" style="margin-top:6px;">{{ attendancePercent }}% avg fill rate</div>
-      </div>
-
+      <a href="/customer-account/my-bookings" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Back
+      </a>
     </div>
 
     <!-- Past Events -->
     <div class="section-header">
-      <h2>Past events</h2>
+      <h2>Past Events</h2>
     </div>
 
     <div class="events-grid">
       {% for event in pastEvents %}
       <div class="event-card">
-        {% if event.first_photo %}
-          <img class="event-card-img" src="{{ event.first_photo.image.url }}" alt="{{ event.title }}" style="filter:grayscale(40%);">
+        {% if event.image %}
+          <img class="event-card-img" src="{{ event.image }}" alt="{{ event.title }}" style="filter:grayscale(40%);">
         {% else %}
           <div class="event-card-img"></div>
         {% endif %}
@@ -349,30 +231,20 @@
         <div class="event-card-body">
           <div class="event-card-title">{{ event.title }}</div>
           <div class="event-card-meta">
-            {{ event.location }}<br>
+            {{ event.organizer }}<br>
             {{ event.date }}
-          </div>
-          <div class="card-cap-row">
-            <span>{{ event.currentCapacity }}/{{ event.maxCapacity }}</span>
-            <span>{{ event.capacityPercent }}% booked</span>
-          </div>
-          <div class="card-progress">
-            <div class="progress" role="progressbar" aria-valuenow="{{ event.capacityPercent }}" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: {{ event.capacityPercent }}%"></div>
-            </div>
           </div>
         </div>
 
         <div class="past-card-rating">
-          {% if event.avgRating %}
+          {% if event.rating %}
             <span class="past-stars">★★★★☆</span>
-            <span class="past-rating-num">{{ event.avgRating }}</span>
-            <span>({{ event.ratingCount }})</span>
+            <span class="past-rating-num">{{ event.rating }}</span>
           {% else %}
             <span style="color:var(--light-muted);">Not yet rated</span>
           {% endif %}
           <span style="margin-left:auto;">
-            <a href="/business-account/my-events/{{ event.id }}/stats" class="btn-card btn-stats" style="display:inline-block;">Stats</a>
+            <a href="/customer-account/my-bookings/rate/{{ event.id }}" class="btn-card" style="display:inline-block; background:var(--accent-10); color:var(--accent); padding:4px 12px; border-radius:999px; font-size:12px; text-decoration:none;">Rate</a>
           </span>
         </div>
       </div>
@@ -385,5 +257,6 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
 </body>
 </html>

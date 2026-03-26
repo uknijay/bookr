@@ -13,7 +13,7 @@
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Events</title>
+  <title>Edit Bookings | Bookr</title>
 
   <style>
     :root{
@@ -90,81 +90,25 @@
       letter-spacing: -0.5px;
     }
 
-    .btn-create{
-      border: 0;
-      background: var(--accent);
-      color: #ffffff;
-      padding: 10px 20px;
+    .btn-back{
+      background: var(--card);
+      color: var(--accent);
+      border: 1px solid var(--border);
+      padding: 8px 20px;
       border-radius: 999px;
       font-weight: 600;
       font-size: 14px;
       font-family: inherit;
-      box-shadow: 0 10px 18px rgba(0,84,147,.18);
       text-decoration: none;
       display: inline-block;
       transition: box-shadow 0.2s;
     }
 
-    .btn-create:hover{
-      box-shadow: 0 10px 18px rgba(0,0,0,.2);
-      color: #fff;
-    }
-
-    /* ── Stats row ── */
-    .stats-row{
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .stat-card{
-      background: var(--card);
-      border: 1px solid rgba(0,0,0,.06);
-      border-radius: var(--radius);
+    .btn-back:hover{
       box-shadow: var(--shadow);
-      padding: 16px;
     }
 
-    .stat-label{
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--light-muted);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      margin-bottom: 6px;
-    }
-
-    .stat-value{
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .stat-meta{
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .stat-stars{
-      color: var(--accent);
-      letter-spacing: 2px;
-    }
-
-    .stat-progress .progress{
-      height: 8px;
-      background-color: var(--accent-20);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-
-    .stat-progress .progress-bar{
-      background-color: var(--accent);
-    }
-
-    /* ── Section labels ── */
+    /* ── Section headers ── */
     .section-header{
       display: flex;
       align-items: center;
@@ -193,6 +137,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+      position: relative;
     }
 
     .event-card-img{
@@ -264,12 +209,12 @@
 
     .btn-card:hover{ opacity: .85; }
 
-    .btn-stats{
-      background: var(--accent-10);
-      color: var(--accent);
+    .btn-cancel{
+      background: #dc2626;
+      color: white;
     }
 
-    .btn-edit{
+    .btn-keep{
       background: var(--bg);
       color: var(--muted);
       border: 1px solid var(--border) !important;
@@ -295,12 +240,10 @@
 
     /* ── Responsive ── */
     @media (max-width: 1080px){
-      .stats-row{ grid-template-columns: repeat(2, 1fr); }
       .events-grid{ grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 600px){
-      .stats-row{ grid-template-columns: 1fr 1fr; }
       .events-grid{ grid-template-columns: 1fr; }
       .page-header h1{ font-size: 24px; }
     }
@@ -311,85 +254,54 @@
 <body>
   <div class="topbar">
     <a href="/home" class="topbar-logo">Bookr</a>
-    <a href="/business-account" class="topbar-user">
-      <i class="bi bi-person-circle"></i> {{ business.displayName }}
+    <a href="/customer-account" class="topbar-user">
+      <i class="bi bi-person-circle"></i> {{ customer.displayName }}
     </a>
   </div>
 
   <main class="page">
 
     <div class="page-header">
-      <h1>Your Events</h1>
-      <a href="/business-account/my-events/create-event" class="btn-create">+ Create Event</a>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-row">
-
-      <div class="stat-card">
-        <div class="stat-label">Upcoming Events</div>
-        <div class="stat-value">{{ upcomingEventCount }}</div>
-        <div class="stat-meta">scheduled</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Total Bookings</div>
-        <div class="stat-value">{{ totalBookings }}</div>
-        <div class="stat-meta">all time</div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Average Rating</div>
-        <div class="stat-value">{{ business.avgRating }}</div>
-        <div class="stat-meta">
-          <span class="stat-stars">★★★★☆</span>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">Spots Left</div>
-        <div class="stat-value">{{ spotsRemaining }}</div>
-        <div class="stat-progress">
-          <div class="progress" role="progressbar" aria-valuenow="{{ spotsBookedPercent }}" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar" style="width: {{ spotsBookedPercent }}%"></div>
-          </div>
-        </div>
-        <div class="stat-meta" style="margin-top:6px;">{{ spotsBookedPercent }}% booked</div>
-      </div>
-
+      <h1>Edit Bookings</h1>
+      <a href="/customer-account/my-bookings" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Back
+      </a>
     </div>
 
     <!-- Upcoming Events -->
     <div class="section-header">
-      <h2>Upcomings</h2>
+      <h2>Upcoming Bookings</h2>
     </div>
 
     <div class="events-grid">
-      {% for event in upcomingEvents %}
+      {% for booking in upcomingBookings %}
       <div class="event-card">
-        {% if event.first_photo %}
-          <img class="event-card-img" src="{{ event.first_photo.image.url }}" alt="{{ event.title }}">
+        {% if booking.eventImage %}
+          <img class="event-card-img" src="{{ booking.eventImage }}" alt="{{ booking.eventTitle }}">
+        {% else %}
+          <div class="event-card-img"></div>
+        {% endif %}
 
         <div class="event-card-body">
-          <div class="event-card-title">{{ event.title }}</div>
+          <div class="event-card-title">{{ booking.eventTitle }}</div>
           <div class="event-card-meta">
-            {{ event.location }}<br>
-            {{ event.date }}
+            {{ booking.organizer }}<br>
+            {{ booking.date }} at {{ booking.time }}
           </div>
           <div class="card-cap-row">
-            <span>{{ event.currentCapacity }}/{{ event.maxCapacity }}</span>
-            <span>{{ event.capacityPercent }}% booked</span>
+            <span>{{ booking.currentCapacity }}/{{ booking.maxCapacity }}</span>
+            <span>{{ booking.capacityPercent }}% booked</span>
           </div>
           <div class="card-progress">
-            <div class="progress" role="progressbar" aria-valuenow="{{ event.capacityPercent }}" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: {{ event.capacityPercent }}%"></div>
+            <div class="progress" role="progressbar" aria-valuenow="{{ booking.capacityPercent }}" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: {{ booking.capacityPercent }}%"></div>
             </div>
           </div>
         </div>
 
         <div class="event-card-actions">
-          <a href="/business-account/my-events/{{ event.id }}/stats" class="btn-card btn-stats">Stats</a>
-          <a href="/business-account/my-events/edit-event/{{ event.id }}" class="btn-card btn-edit">Edit</a>
+          <a href="/customer-account/my-bookings/cancel/{{ booking.id }}" class="btn-card btn-cancel">Cancel</a>
+          <a href="/customer-account/my-bookings/keep/{{ booking.id }}" class="btn-card btn-keep">Keep</a>
         </div>
       </div>
       {% endfor %}
@@ -397,33 +309,35 @@
 
     <!-- Past Events -->
     <div class="section-header">
-      <h2>Past events</h2>
+      <h2>Past Events</h2>
     </div>
 
     <div class="events-grid">
-      {% for event in pastEvents %}
+      {% for booking in pastBookings %}
       <div class="event-card">
-        {% if event.first_photo %}
-          <img class="event-card-img" src="{{ event.first_photo.image.url }}" alt="{{ event.title }}" style="filter:grayscale(40%);">
+        {% if booking.eventImage %}
+          <img class="event-card-img" src="{{ booking.eventImage }}" alt="{{ booking.eventTitle }}" style="filter:grayscale(40%);">
+        {% else %}
+          <div class="event-card-img"></div>
+        {% endif %}
 
         <div class="event-card-body">
-          <div class="event-card-title">{{ event.title }}</div>
+          <div class="event-card-title">{{ booking.eventTitle }}</div>
           <div class="event-card-meta">
-            {{ event.location }}<br>
-            {{ event.date }}
+            {{ booking.organizer }}<br>
+            {{ booking.date }}
           </div>
         </div>
 
         <div class="past-card-rating">
-          {% if event.avgRating %}
+          {% if booking.rating %}
             <span class="past-stars">★★★★☆</span>
-            <span class="past-rating-num">{{ event.avgRating }}</span>
-            <span>({{ event.ratingCount }})</span>
+            <span class="past-rating-num">{{ booking.rating }}</span>
           {% else %}
             <span style="color:var(--light-muted);">Not yet rated</span>
           {% endif %}
           <span style="margin-left:auto;">
-            <a href="/business-account/my-events/{{ event.id }}/stats" class="btn-card btn-stats" style="display:inline-block;">Stats</a>
+            <a href="/customer-account/my-bookings/rate/{{ booking.id }}" class="btn-card btn-stats" style="display:inline-block; background:var(--accent-10); color:var(--accent);">Rate</a>
           </span>
         </div>
       </div>
@@ -436,5 +350,6 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
 </body>
 </html>

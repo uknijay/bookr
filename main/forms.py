@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from .models import Event
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
@@ -21,3 +22,12 @@ class LoginForm(AuthenticationForm):
         required=False,
         widget=forms.CheckboxInput()
     )
+
+class EventForm(forms.ModelForm):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    time = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'venue', 'venueAddress', 'maxCapacity']
+
