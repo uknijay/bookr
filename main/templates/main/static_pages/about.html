@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'main/css/pages/about.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="behind-container">
+  <div class="about-container">
+    <div class="about-card">
+
+      <h1>About Bookr</h1>
+      <p class="tagline">A two-sided platform for discovering and running events.</p>
+
+      <p>
+        Bookr makes it easy to attend and run events. Current event booking systems
+        are often expensive, hard to use, can have outdated attendance info, and may
+        cause businesses to scatter their event information across different sites.
+      </p>
+      <p>
+        Bookr centralises all of this — event information is clear, bookings are
+        easily tracked, and capacity is always accurate.
+      </p>
+
+      <hr class="divider">
+
+      <div class="audience-grid">
+        <div class="audience-item">
+          <h3>For Customers</h3>
+          <p>An easy, fast, and reliable way to discover and book events near you.</p>
+        </div>
+        <div class="audience-item">
+          <h3>For Businesses</h3>
+          <p>A simple system to post events, draw attendees, and manage bookings in one place.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,6 +1,30 @@
-{% extends "main/base.html" %}
 
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+
+  <link rel="stylesheet" href="{% static 'main/css/pages/discover.css' %}">
+
+{% endblock %}
 {% block content %}
-  <h1>Bookr | Discover</h1>
-  <p>Browse trending events or search by location, date, and category.</p>
+
+<div class="discover-page">
+  <section class="discover-hero">
+    <h1 class="discover-title">Discover the best events near you</h1>
+    <p class="discover-subtitle">Explore top events and book with ease</p>
+          {% include "main/components/search_bar.html" %}
+  </section>
+
+  <hr class="discover-divider">
+
+  <section class="discover-section">
+    <div id="discover-results">
+      {% include "main/events/discover_results.html" %}
+    </div>
+  </section>
+</div>
+
+<script src="{% static 'main/js/pages/discover.js' %}"></script>
+
 {% endblock %}

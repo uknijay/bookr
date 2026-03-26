@@ -1,6 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block extra_head %}
+
+  <link rel="stylesheet" href="{% static 'main/css/pages/detail.css' %}">
 
   <!-- Inter Font-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,301 +15,35 @@
   <!-- Bootstrap Icon and CSS-->
   <link rel="stylesheet" href= "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Bootstrap-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ event.title }}</title>
+{% endblock %}
 
-  <style>
-    :root{
-      --max-width: 1100px;
-      --text: #111;
-      --muted: #444;
-      --light-muted: #666;
-
-      --border: #cfcfcf;
-      --radius: 16px;
-      --shadow: 0 10px 24px rgba(0,0,0,.08);
-      --accent: #005493;
-      --accent-10: rgba(0, 84, 147, .10);
-      --accent-20: rgba(0, 84, 147, .20);
-      --bg: #f6f8fb;
-      --card: #ffffff;
-    }
-
-    * { box-sizing: border-box; }
-
-    body{
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-
-
-    .topbar{
-      height: 64px;
-      background: var(--accent);
-      box-shadow: 0 8px 18px rgba(0,0,0,.10);
-    }
-
-
-    .page{
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 28px 24px;
-    }
-
-
-    .mainsection{
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 26px;
-      align-items: stretch;
-      margin-top: 18px;
-    }
-
-
-    .rightcol{
-      border: 1px solid rgba(0,0,0,.06);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      background: var(--card);
-      overflow: hidden;
-    }
-
-    .quickinfo-header{
-      padding: 14px 16px;
-      font-weight: 700;
-      font-size: 18px;
-      background: var(--accent-10);
-      color: var(--accent);
-      border-bottom: 1px solid rgba(0,0,0,.06);
-    }
-
-    .quickinfo-section{
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(0,0,0,.06);
-    }
-
-
-    .quickinfo-capacity{
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-
-    .quickinfo-capacity .qi-capacity{
-      margin-bottom: 6px;
-    }
-
-    .quickinfo-capacity .qi-footnote{
-      margin-top: 6px;
-    }
-
-    .qi-row{
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 12px;
-      align-items: start;
-    }
-
-    .qi-icon{
-      font-size: 20px;
-      line-height: 1;
-      color: var(--accent);
-      margin-top: 2px;
-    }
-
-    .qi-title{
-      font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 4px;
-    }
-
-    .qi-text{
-      color: rgba(0,0,0,.72);
-      font-size: 14px;
-      line-height: 1.25;
-    }
-
-    .qi-capacity{
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 10px;
-      margin-top: 2px;
-      margin-bottom: 10px;
-    }
-
-    .qi-capacity .qi-text{ margin: 0; }
-
-    .qi-footnote{
-      text-align: right;
-      font-size: 12px;
-      color: rgba(0,0,0,.55);
-      margin-top: 8px;
-    }
-
-    .qi-actions{
-      padding: 18px 16px;
-    }
-
-    .qi-actions .btn-primary.btn-lg{
-      width: 100%;
-      border: 0;
-      background: var(--accent);
-
-      color: #ffffff;
-      padding: 14px 16px;
-      border-radius: 999px;
-      font-weight: 600;
-      box-shadow: 0 10px 18px rgba(0,84,147,.18);
-      transition: background-color 0.1s, box-shadow 0.2s;
-    }
-
-    .qi-actions .btn-primary.btn-lg:hover {
-      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s, box-shadow 0.9s;
-    }
-
-    .qi-actions .qi-sub{
-      text-align: center;
-      font-size: 12px;
-      color: rgba(0,0,0,.55);
-      margin-top: 10px;
-    }
-
-    .qi-progress .progress{
-      height: 18px; /* bar sizing */
-      background-color: var(--accent-20);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .qi-progress .progress-bar{
-      background-color: var(--accent);
-    }
-
-
-    .titleblock h1{
-      margin: 0;
-      font-size: 52px;
-      line-height: 1.0;
-      letter-spacing: -1px;
-    }
-
-    .titleblock .byline{
-      margin-top: 8px;
-      font-size: 22px;
-      color: var(--muted);
-    }
-
-    .titleblock .ratingrow{
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      color: var(--muted);
-    }
-
-    .titleblock .stars{
-      letter-spacing: 2px;
-      font-size: 18px;
-      color: var(--accent);
-    }
-
-    .titleblock .ratingnum{
-      font-weight: 700;
-    }
-
-    .titleblock .ratingcount{
-      color: var(--light-muted);
-    }
-
-
-    .carousel-card{
-      border: 1px solid rgba(0,0,0,.06);
-      height: 480px;
-      width: 100%;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      background: var(--card);
-
-    }
-
-
-      #eventCarousel,
-      #eventCarousel .carousel-inner,
-      #eventCarousel .carousel-item{
-      height: 100%;
-    }
-
-      .carousel-card .carousel-item img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-
-    
-    .detailssection{
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: 1fr 1fr; 
-      gap: 26px;
-      align-items: start;
-    }
-
-    .detailcard{
+{% block content %}
+ 
 
 
 
 
-      background: var(--background);
-      padding: 18px;
-    }
+  <!-- message alert for booking -->
+   {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
-    .detailcard h2{
-      margin: 0 0 10px 0;
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .detailcard p{
-      margin: 0;
-      color: rgba(0,0,0,.72);
-      line-height: 1.5;
-    }
-
-    .map-embed{
-      width: 100%;
-      height: 420px;
-      border: 0;
-      border-radius: 14px;
-      display: block;
-    }
-
-
-    @media (max-width: 1080px){
-      .mainsection{ grid-template-columns: 1fr; }
-      .rightcol{ min-width: 0; }
-      .detailssection{ grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 800px){
-      .titleblock h1{ font-size: 38px; }
-      .titleblock .byline{ font-size: 18px; }
-      .carousel-card .carousel-item img{ min-height: 260px; }
-    }
-    
-  </style>
-
-</head>
-
-<body>
-  <div class="topbar"></div>
 
   <main class="page">
 
@@ -312,12 +51,11 @@
         <h1>{{ event.title }}</h1>
         <div class="byline">By {{ event.organiser.displayName }}</div>
 
-
         <div class="ratingrow" aria-label="rating">
-          <span class="stars" aria-hidden="true">★★★★☆</span>
-          <span class="ratingnum">{{ event.organiser.rating }}</span>
-          <span class="ratingcount">({{ event.organiser.reviewCount }})</span>
-      </div>
+          <span class="stars" aria-hidden="true">{{ starDisplay }}</span>
+          <span class="ratingnum">{{ avgRating|floatformat:1 }}</span>
+          <span class="ratingcount">({{ reviewCount }})</span>
+        </div>
     </section>
 
     <section class="mainsection">
@@ -384,24 +122,26 @@
               <div>
                 <div class="qi-title">Capacity</div>
                 <div class="qi-capacity">
-                  <div class="qi-text">{{ event.currentCapacity }}/{{ event.maxCapacity }}</div>
+                  <div class="qi-text" id="capacityText">{{ event.currentCapacity }}/{{ event.maxCapacity }}</div>
                 </div>
 
                 <div class="qi-progress">
                   <div class="progress" role="progressbar" aria-label="Capacity" aria-valuenow="{{ capacityPercent }}" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: {{ capacityPercent }}%"></div>
+                    <div id="capacityBar" class="progress-bar" style="width: {{ capacityPercent }}%"></div>
                   </div>
+                  {% if event_has_passed %}
+                  <div class="qi-footnote"> This event has already passed</div>
+                  {% else %}
                   <div class="qi-footnote">Starts in {{ daysUntilStart }} days</div>
+                  {% endif %}
                 </div>
               </div>
           </div>
         </div>
         </div>
 
-        <div class="qi-actions">
-            <button type="button" class="btn btn-primary btn-lg">Book</button>
-            <div class="qi-sub">Booking is Instant</div>
-        </div>
+       {% include "main/components/event_action_component.html" %}
+
       </aside>
     </section>
 
@@ -425,10 +165,6 @@
     </section>
   </main>
 
-  <!-- Bootstrap-->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="{% static 'main/js/pages/detail.js' %}"></script>
 
-</body>
-</html>
+{% endblock %}

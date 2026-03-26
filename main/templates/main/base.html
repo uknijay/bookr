@@ -1,25 +1,49 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
 
   <meta charset="utf-8">
-  <title>Bookr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Bookr{% endblock %}</title>
 
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+
+  <link rel="stylesheet" href="{% static 'main/css/components.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  {% block extra_head %}{% endblock %}
+
+  <style>
+
+  </style>
 </head>
 <body>
 
-  <header>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="{% url 'discover' %}" class="site-logo">
+        <img src="/media/bookr_logo.png" alt="Bookr logo">
+      </a>
 
-    <a href="/">Bookr</a>
-    <nav style="float:right;">
-      <a href="/account/login/">Sign in</a>
-    </nav>
+      <nav class="site-nav">
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
 
+        {% if request.session.accountId %}
+          <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+          <a href="{% url 'login' %}">Sign in</a>
+        {% endif %}
+      </nav>
+    </div>
   </header>
-  <hr>
-  
-  {% block content %}{% endblock %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
 </body>
 </html>

@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+<div class="search-bar-wrapper">
+  <form class="search-bar" method="get" action="{% url 'discover' %}">
+    <div class="search-segment">
+      <i class="bi bi-calendar3 search-icon"></i>
+      <div class="search-text">
+        <label for="search-date" class="search-label">Dates</label>
+        <input
+            type="date"
+            id="search-date"
+            name="date"
+            class="search-input"
+            value="{{ request.GET.date|default:'' }}"
+            >
+      </div>
+    </div>
+
+    <div class="search-segment">
+      <i class="bi bi-geo-alt search-icon"></i>
+      <div class="search-text">
+        <label for="search-location" class="search-label">Location</label>
+        <input
+          type="text"
+          id="search-location"
+          name="location"
+          class="search-input"
+          placeholder="All of the UK"
+          value="{{ request.GET.location|default:'' }}"
+        >
+      </div>
+    </div>
+
+    <div class="search-segment">
+      <i class="bi bi-search search-icon"></i>
+      <div class="search-text">
+        <label for="search-title" class="search-label">Search</label>
+        <input
+          type="text"
+          id="search-title"
+          name="q"
+          class="search-input"
+          placeholder="Search Events..."
+          value="{{ request.GET.q|default:'' }}"
+        >
+      </div>
+    </div>
+
+    <button type="submit" class="btn search-button">Search</button>
+  </form>
+</div>
