@@ -1,0 +1,77 @@
+  :root {
+    --accent: #005493;
+    --accent-dark: #004574;
+    --bg: #f6f8fb;
+    --text: #111;
+    --muted: #666;
+  }
+
+  body {
+    font-family: "Inter", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .bookr-card {
+    border: none;
+    border-radius: 18px;
+  }
+
+  .bookr-title {
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .bookr-subtitle {
+    color: var(--muted);
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 12px;
+    border-color: #d7dde5;
+    padding: 12px 14px;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(0, 84, 147, 0.12);
+  }
+
+  .btn-bookr {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    border-radius: 999px;
+    font-weight: 600;
+    padding: 10px 18px;
+  }
+
+  .btn-bookr:hover {
+    background-color: var(--accent-dark);
+    border-color: var(--accent-dark);
+  }
+
+  .btn-bookr-light {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+    border-radius: 999px;
+    font-weight: 600;
+    padding: 10px 18px;
+  }
+
+  .btn-bookr-light:hover {
+    background-color: #bb2d3b;
+    border-color: #bb2d3b;
+    color: #fff;
+  }
+
+  .bookr-alert {
+    border-radius: 14px;
+  }
+
+  .required-star {
+    color: #dc3545;
+    margin-left: 4px;
+  }

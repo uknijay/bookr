@@ -1,108 +1,12 @@
 {% extends "main/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'main/css/pages/about.css' %}">
+{% endblock %}
 
 {% block content %}
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-                 Ubuntu, Cantarell, sans-serif;
-  }
-
-  .header-placeholder span {
-    font-size: 20px;
-    font-weight: 700;
-    color: #4a90e2;
-  }
-
-  /* About content */
-  .about-container {
-    max-width: 720px;
-    width: 100%;
-    padding: 0 20px;
-}
-
-  .about-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    padding: 40px;
-  }
-
-  .about-card h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 8px;
-  }
-
-  .about-card .tagline {
-    font-size: 15px;
-    color: #4a90e2;
-    font-weight: 500;
-    margin-bottom: 28px;
-  }
-
-  .about-card p {
-    font-size: 15px;
-    color: #555;
-    line-height: 1.75;
-    margin-bottom: 16px;
-  }
-
-  .about-card p:last-child { margin-bottom: 0; }
-
-  .divider {
-    border: none;
-    border-top: 1px solid #eee;
-    margin: 24px 0;
-  }
-
-  .audience-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 4px;
-  }
-
-  .audience-item {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 16px 20px;
-    border-left: 3px solid #4a90e2;
-  }
-
-  .audience-item h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 6px;
-  }
-
-  .audience-item p {
-    font-size: 13px;
-    color: #777;
-    line-height: 1.6;
-    margin-bottom: 0;
-  }
-
-  .behind-container {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;   
-    min-height: calc(100vh - 80px);
-    padding: 40px 0;       
-}
-
-  @media (max-width: 600px) {
-    .about-container { padding: 0 20px; margin: 30px auto; }
-    .about-card { padding: 24px; }
-    .audience-grid { grid-template-columns: 1fr; }
-  }
-</style>
-
-<!-- Placeholder for header -->
-
 <div class="behind-container">
   <div class="about-container">
     <div class="about-card">
