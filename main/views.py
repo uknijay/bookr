@@ -4,14 +4,18 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.db.models import Q
 from django.db import transaction
-
+from django.http import JsonResponse
 from .decorators import *
 from .forms import LoginForm, EventForm, RegistrationForm
 from .models import Event, Customer, Business
 from main.models import EventPhoto, Account, Books, Rates
+from django.shortcuts import render
+from django.db.models import Q
 
 ## NOTE: Look at /decorators.py, can use these to check if user is logged in and allow only logged in user to access view. 
 ##       This is good for like "create event", "rate business", "book event" etc, 
+
+
 
 
 
@@ -36,14 +40,19 @@ def discover(request):
             Q(venueAddress__icontains=location)
         )
 
-    if date:
+    if date != "":
         events = events.filter(date__date=date)
 
     events = events.order_by("date")
 
-    return render(request, "main/events/discover.html", {
+    context = {
         "events": events,
-    })
+    }
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return render(request, "main/events/_discover_results.html" , context)
+
+    return render(request, "main/events/discover.html", context)
 
 def about(request):
     return render(request, "main/static_pages/about.html")
@@ -169,6 +178,7 @@ def event_detail(request, event_id):
     
     show_rating_component = False
     existing_rating = None
+    has_booked = False
 
     if request.session.get("accountId") and request.session.get("accountType") == "customer":
         customer = Customer.objects.filter(accountId=request.session.get("accountId")).first()
@@ -199,31 +209,77 @@ def event_detail(request, event_id):
         "show_rating_component": show_rating_component,
         "existing_rating": existing_rating,
         "event_has_passed": event_has_passed,
+        "has_booked": has_booked,
     })
 
 
 @customer_required #Decorator handles checking if user logged in and is customer, if not logged in --> /login, if not customer --> /discover
 def book_event(request, event_id):
     if request.method != "POST":
-        return redirect("event_detail", event_id=event_id)
+        return JsonResponse({"success": False, "message": "Invalid request."})
 
-    event =  get_object_or_404(Event, id=event_id)
+    event = get_object_or_404(Event, id=event_id)
     customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
 
     if Books.objects.filter(customerId=customer, eventId=event).exists():
-        messages.warning(request, "User already booked this event")
-        return redirect("event_detail", event_id=event_id)
+
+        return JsonResponse({"success" : False, "message": "You already booked this event"})
+
+    if event.currentCapacity >= event.maxCapacity:
+
+        return JsonResponse({"success" : False, "message": "This event is full"})
 
     try:
-        booking = Books(customerId=customer, eventId=event)
-        booking.save()
-        messages.success(request, "Booking created successfully.")
-        
-    except Exception as e:
-        messages.error(request, str(e))
+        Books.objects.create(customerId=customer, eventId=event)
 
-    return redirect("event_detail", event_id=event_id)
+        event.save()
 
+
+        capacityPercent = 0
+        if event.maxCapacity > 0:
+            capacityPercent = int((event.currentCapacity / event.maxCapacity) * 100)
+
+        return JsonResponse({
+            "success": True,
+            "message": "Booking created successfully.",
+            "currentCapacity": event.currentCapacity,
+            "maxCapacity": event.maxCapacity,
+            "capacityPercent": capacityPercent
+        })
+    except Exception:
+        return JsonResponse({"success": False, "message": "Something went wrong."})
+
+@customer_required
+def unbook_event(request, event_id):
+    if request.method != "POST":
+        return redirect("event_detail", event_id=event_id)
+
+    event = get_object_or_404(Event, id=event_id)
+    customer = get_object_or_404(Customer, accountId=request.session.get("accountId"))
+
+    booking = Books.objects.filter(customerId=customer, eventId=event).first()
+
+    if not booking:
+        return JsonResponse({
+            "success": False,
+            "message": "You have not booked this event."
+        })
+
+    booking.delete()
+    event.refresh_from_db()
+
+    capacityPercent = 0
+    if event.maxCapacity > 0:
+        capacityPercent = int((event.currentCapacity / event.maxCapacity) * 100)
+
+    return JsonResponse({
+        "success": True,
+        "action": "unbooked",
+        "message": "Your booking has been cancelled.",
+        "currentCapacity": event.currentCapacity,
+        "maxCapacity": event.maxCapacity,
+        "capacityPercent": capacityPercent,
+    })
 def about(request):
     return render(request, "main/static_pages/about.html")
 
@@ -296,3 +352,5 @@ def rate_event(request, event_id):
 
     messages.success(request, "Rating submitted successfully.")
     return redirect("event_detail", event_id=event_id)
+
+

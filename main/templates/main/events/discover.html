@@ -1,62 +1,13 @@
+
 {% extends "main/base.html" %}
+{% load static %}
 
+{% block extra_head %}
+
+  <link rel="stylesheet" href="{% static 'main/css/pages/discover.css' %}">
+
+{% endblock %}
 {% block content %}
-<style>
-  .discover-page {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 24px 48px;
-  }
-
-  .discover-hero {
-    text-align: center;
-    padding: 40px 0 30px;
-  }
-
-  .discover-title {
-    margin: 0 auto;
-    max-width: 900px;
-    font-size: 48px;
-    font-weight: 700;
-    line-height: 1.1;
-    color: #111;
-  }
-
-  .discover-subtitle {
-    margin-top: 16px;
-    font-size: 22px;
-    color: #444;
-  }
-
-  .discover-divider {
-    border: none;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    margin: 10px 0 28px;
-  }
-
-  .discover-section h2 {
-    margin-bottom: 18px;
-    font-size: 34px;
-    font-weight: 700;
-    color: #111;
-  }
-
-  .discover-gallery .container {
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  @media (max-width: 768px) {
-    .discover-title {
-      font-size: 36px;
-    }
-
-    .discover-subtitle {
-      font-size: 18px;
-    }
-  }
-</style>
 
 <div class="discover-page">
   <section class="discover-hero">
@@ -68,14 +19,12 @@
   <hr class="discover-divider">
 
   <section class="discover-section">
-    {% if request.GET.q or request.GET.location or request.GET.date %}
-      <h2>Results</h2>
-    {% else %}
-      <h2>Trending</h2>
-    {% endif %}
-    <div class="discover-gallery">
-      {% include "main/components/event_card_gallery.html" with events=events %}
+    <div id="discover-results">
+      {% include "main/events/discover_results.html" %}
     </div>
   </section>
 </div>
+
+<script src="{% static 'main/js/pages/discover.js' %}"></script>
+
 {% endblock %}
