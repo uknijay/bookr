@@ -37,7 +37,7 @@
             <a href="{% url 'business_my_events' %}">My Events</a>
             <a href="{% url 'create_event' %}">Create Event</a>
             <a href="{% url 'business_view_ratings' %}">My Ratings</a>
-          {% else %}
+          {% endif %}
           {% if request.session.accountType == "customer" %}
             <a href="{% url 'my_bookings' %}">My Bookings</a>
           {% endif %}
