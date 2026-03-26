@@ -1,0 +1,115 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Stats | {{ event.title }} | Bookr{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{% static 'main/css/pages/event_stats.css' %}">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <div class="page-header">
+    <div>
+      <h1>{{ event.title }}</h1>
+      <div class="event-date">
+        <i class="bi bi-calendar3"></i> {{ event.date }} &nbsp;|&nbsp;
+        <i class="bi bi-geo-alt"></i> {{ event.venue }}
+      </div>
+    </div>
+    <a href="{% url 'business_my_events' %}" class="btn-back">
+      <i class="bi bi-arrow-left"></i> Back to Events
+    </a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Bookings</div>
+      <div class="stat-value">{{ event.currentCapacity }}</div>
+      <div class="stat-meta">out of {{ event.maxCapacity }} capacity</div>
+      <div class="stat-progress">
+        <div class="progress">
+          <div class="progress-bar" style="width:{{ capacityPercent }}%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Available Spots</div>
+      <div class="stat-value">{{ spotsRemaining }}</div>
+      <div class="stat-meta">{{ capacityPercent }}% booked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Business Avg Rating</div>
+      <div class="stat-value">{{ avgRating }}</div>
+      <div class="stat-meta">{{ reviewCount }} review{{ reviewCount|pluralize }}</div>
+      <div style="font-size:12px;margin-top:4px;color:var(--accent);">{{ starDisplay }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Booking Rate</div>
+      <div class="stat-value">{{ capacityPercent }}%</div>
+      <div class="stat-meta">of total capacity booked</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="card">
+      <div class="card-header"><h3>Recent Bookings</h3></div>
+      <div class="card-body">
+        <div class="bookings-list">
+          {% for booking in recentBookings %}
+          <div class="booking-item">
+            <div>
+              <div class="booking-customer">{{ booking.customerName }}</div>
+              <div class="booking-email">{{ booking.customerEmail }}</div>
+            </div>
+            <div class="booking-date">{{ booking.date }}</div>
+          </div>
+          {% empty %}
+          <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>No bookings yet</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>Ratings Breakdown</h3></div>
+      <div class="card-body">
+        {% if reviewCount > 0 %}
+        <div class="ratings-summary">
+          <div class="overall-rating">
+            <div class="rating-number">{{ avgRating }}</div>
+            <div class="rating-stars">{{ starDisplay }}</div>
+            <div class="rating-count">{{ reviewCount }} review{{ reviewCount|pluralize }}</div>
+          </div>
+          <div class="rating-breakdown">
+            {% for breakdown in ratingBreakdown %}
+            <div class="breakdown-row">
+              <span class="breakdown-stars">{{ breakdown.stars }} </span>
+              <div class="breakdown-bar">
+                <div class="breakdown-fill" style="width:{{ breakdown.percent }}%"></div>
+              </div>
+              <span class="breakdown-percent">{{ breakdown.percent }}%</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="bi bi-star"></i>
+          <p>No ratings yet</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

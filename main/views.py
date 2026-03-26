@@ -375,3 +375,106 @@ def my_bookings(request):
         "past_events": past_events,
         "rated_events": rated_events,
     })
+
+
+@business_required
+def business_my_events(request):
+    business = get_object_or_404(Business, account=request.session.get("accountId"))
+    now = timezone.now()
+
+    upcomingEvents = business.organised_events.filter(date__gte=now).order_by("date")
+    pastEvents = business.organised_events.filter(date__lt=now).order_by("-date")
+
+    totalBookings = Books.objects.filter(eventId__organiser=business).count()
+    spotsBooked = sum(e.currentCapacity for e in upcomingEvents)
+    totalSpots = sum(e.maxCapacity for e in upcomingEvents)
+    spotsRemaining = totalSpots - spotsBooked
+    spotsBookedPercent = int((spotsBooked / totalSpots) * 100) if totalSpots > 0 else 0
+
+    return render(request, "main/business/my_events.html", {
+        "business": business,
+        "upcomingEvents": upcomingEvents,
+        "pastEvents": pastEvents,
+        "upcomingEventCount": upcomingEvents.count(),
+        "totalBookings": totalBookings,
+        "spotsRemaining": spotsRemaining,
+        "spotsBookedPercent": spotsBookedPercent,
+    })
+
+
+@business_required
+def business_event_stats(request, event_id):
+    business = get_object_or_404(Business, account=request.session.get("accountId"))
+    event = get_object_or_404(Event, id=event_id, organiser=business)
+
+    bookings = Books.objects.filter(eventId=event).select_related("customerId")
+    ratings = Rates.objects.filter(businessId=business)
+
+    capacityPercent = int((event.currentCapacity / event.maxCapacity) * 100) if event.maxCapacity > 0 else 0
+    spotsRemaining = max(0, event.maxCapacity - event.currentCapacity)
+
+    avgRating = business.avgRating or 0
+    reviewCount = business.reviewCount
+    roundedRating = round(avgRating)
+    starDisplay = "★" * roundedRating + "☆" * (5 - roundedRating)
+
+    ratingBreakdown = []
+    for star in range(5, 0, -1):
+        count = ratings.filter(rating=star).count()
+        percent = int((count / reviewCount) * 100) if reviewCount > 0 else 0
+        ratingBreakdown.append({"stars": star, "percent": percent, "count": count})
+
+    recentBookings = []
+    for booking in bookings.order_by("-bookingDate")[:10]:
+        recentBookings.append({
+            "customerName": booking.customerId.name,
+            "customerEmail": booking.customerId.accountId.email,
+            "date": booking.bookingDate,
+        })
+
+    return render(request, "main/business/event_stats.html", {
+        "business": business,
+        "event": event,
+        "capacityPercent": capacityPercent,
+        "spotsRemaining": spotsRemaining,
+        "avgRating": round(avgRating, 1),
+        "reviewCount": reviewCount,
+        "starDisplay": starDisplay,
+        "ratingBreakdown": ratingBreakdown,
+        "recentBookings": recentBookings,
+    })
+
+
+@business_required
+def business_view_ratings(request):
+    business = get_object_or_404(Business, account=request.session.get("accountId"))
+    ratings = Rates.objects.filter(businessId=business).select_related("customerId")
+
+    avgRating = business.avgRating or 0
+    reviewCount = business.reviewCount
+    roundedRating = round(avgRating)
+    starDisplay = "★" * roundedRating + "☆" * (5 - roundedRating)
+
+    fiveStarCount = ratings.filter(rating=5).count()
+    fiveStarPercent = int((fiveStarCount / reviewCount) * 100) if reviewCount > 0 else 0
+
+    ratings_list = []
+    for r in ratings:
+        stars = "★" * r.rating + "☆" * (5 - r.rating)
+        ratings_list.append({
+            "customerName": r.customerId.name,
+            "rating": r.rating,
+            "starDisplay": stars,
+        })
+
+    return render(request, "main/business/view_ratings.html", {
+        "business": business,
+        "ratings": ratings_list,
+        "avgRating": round(avgRating, 1),
+        "starDisplay": starDisplay,
+        "totalReviews": reviewCount,
+        "fiveStarCount": fiveStarCount,
+        "fiveStarPercent": fiveStarPercent,
+    })
+
+

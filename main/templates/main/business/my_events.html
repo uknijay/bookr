@@ -1,0 +1,134 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Your Events | Bookr{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{% static 'main/css/pages/my_events.css' %}">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+ 
+{% endblock %}
+
+{% block content %}
+<main class="page">
+  <div class="page-header">
+    <h1>Your Events</h1>
+    <a href="{% url 'create_event' %}" class="btn-create">+ Create Event</a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Upcoming Events</div>
+      <div class="stat-value">{{ upcomingEventCount }}</div>
+      <div class="stat-meta">scheduled</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Bookings</div>
+      <div class="stat-value">{{ totalBookings }}</div>
+      <div class="stat-meta">all time</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Average Rating</div>
+      <div class="stat-value">{{ business.avgRating|default:"" }}</div>
+      <div class="stat-meta">from {{ business.reviewCount }} review{{ business.reviewCount|pluralize }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Spots Left</div>
+      <div class="stat-value">{{ spotsRemaining }}</div>
+      <div class="stat-progress">
+        <div class="progress" role="progressbar" aria-valuenow="{{ spotsBookedPercent }}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar" style="width:{{ spotsBookedPercent }}%"></div>
+        </div>
+      </div>
+      <div class="stat-meta" style="margin-top:6px;">{{ spotsBookedPercent }}% booked</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2>Upcoming</h2>
+  </div>
+
+  <div class="events-grid">
+    {% for event in upcomingEvents %}
+    {% with cap_percent=event.currentCapacity|default:0 %}
+    <div class="event-card">
+      {% with first_photo=event.photos.first %}
+        {% if first_photo %}
+          <img class="event-card-img" src="{{ first_photo.image.url }}" alt="{{ event.title }}">
+        {% else %}
+          <div class="event-card-img"></div>
+        {% endif %}
+      {% endwith %}
+      <div class="event-card-body">
+        <div class="event-card-title">{{ event.title }}</div>
+        <div class="event-card-meta">
+          {{ event.venue }}<br>
+          {{ event.date }}
+        </div>
+        {% if event.maxCapacity > 0 %}
+        {% widthratio event.currentCapacity event.maxCapacity 100 as pct %}
+        <div class="card-cap-row">
+          <span>{{ event.currentCapacity }}/{{ event.maxCapacity }}</span>
+          <span>{{ pct }}% booked</span>
+        </div>
+        <div class="card-progress">
+          <div class="progress" role="progressbar" aria-valuenow="{{ pct }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width:{{ pct }}%"></div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="event-card-actions">
+        <a href="{% url 'business_event_stats' event.id %}" class="btn-card btn-stats">Stats</a>
+        <a href="{% url 'event_detail' event.id %}" class="btn-card btn-edit">View</a>
+      </div>
+    </div>
+    {% endwith %}
+    {% empty %}
+    <div class="empty-state" style="grid-column:1/-1;">
+      <i class="bi bi-calendar-x" style="font-size:48px;display:block;margin-bottom:12px;"></i>
+      <p>No upcoming events</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="section-header">
+    <h2>Past Events</h2>
+  </div>
+
+  <div class="events-grid">
+    {% for event in pastEvents %}
+    <div class="event-card">
+      {% with first_photo=event.photos.first %}
+        {% if first_photo %}
+          <img class="event-card-img" src="{{ first_photo.image.url }}" alt="{{ event.title }}" style="filter:grayscale(40%);">
+        {% else %}
+          <div class="event-card-img"></div>
+        {% endif %}
+      {% endwith %}
+      <div class="event-card-body">
+        <div class="event-card-title">{{ event.title }}</div>
+        <div class="event-card-meta">
+          {{ event.venue }}<br>
+          {{ event.date }}
+        </div>
+      </div>
+      <div class="event-card-actions">
+        <a href="{% url 'business_event_stats' event.id %}" class="btn-card btn-stats">Stats</a>
+        <a href="{% url 'event_detail' event.id %}" class="btn-card btn-edit">View</a>
+      </div>
+    </div>
+    {% empty %}
+    <div class="empty-state" style="grid-column:1/-1;">
+      <i class="bi bi-clock-history" style="font-size:48px;display:block;margin-bottom:12px;"></i>
+      <p>No past events</p>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}
