@@ -1,9 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: #f5f5f5;
@@ -28,23 +22,39 @@ body {
 
 .login-left {
     flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #005493 0%, #003a6b 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 60px 48px;
 }
 
-.image-placeholder {
-    width: 100%;
-    max-width: 500px;
-    height: 500px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    border: 2px dashed rgba(255, 255, 255, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.login-tagline {
+    max-width: 420px;
+}
+
+.tagline-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+}
+
+.tagline-main {
+    font-size: 42px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.tagline-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin: 0;
 }
 
 .login-right {
@@ -120,8 +130,8 @@ body {
 
 .form-input:focus {
     outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    border-color: #005493;
+    box-shadow: 0 0 0 3px rgba(0, 84, 147, 0.1);
 }
 
 .form-options {
@@ -144,7 +154,7 @@ body {
 }
 
 .forgot-password {
-    color: #4a90e2;
+    color: #005493;
     text-decoration: none;
 }
 
@@ -153,7 +163,7 @@ body {
 }
 
 .btn-login {
-    background-color: #4a90e2;
+    background-color: #005493;
     color: white;
     padding: 14px;
     border: none;
@@ -166,7 +176,7 @@ body {
 }
 
 .btn-login:hover {
-    background-color: #357abd;
+    background-color: #004574;
 }
 
 .signup-link {
@@ -183,7 +193,7 @@ body {
 }
 
 .signup-link a {
-    color: #4a90e2;
+    color: #005493;
     text-decoration: none;
     font-weight: 500;
 }
@@ -199,9 +209,10 @@ body {
 
     .login-left {
         min-height: 200px;
+        padding: 32px 24px;
     }
 
-    .image-placeholder {
-        height: 200px;
+    .tagline-main {
+        font-size: 28px;
     }
 }

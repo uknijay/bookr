@@ -26,12 +26,11 @@ class LoginForm(forms.Form):
         })
     )
 
-
-class RegistrationForm(forms.ModelForm, type):
+class RegistrationForm(forms.ModelForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-input',
-            'placeholder': 'Enter your username',
+            'placeholder': 'Enter your name',
             'id': 'id_username'
         })
     )
@@ -51,7 +50,6 @@ class RegistrationForm(forms.ModelForm, type):
         })
     )
 
-
     class Meta:
         model = Account
         fields = ['email']
@@ -62,22 +60,20 @@ class RegistrationForm(forms.ModelForm, type):
                 'id': 'id_email'
             })
         }
-    
-    def __init__(self, *args, accountType, **kwargs):
-        
+
+    def __init__(self, *args, accountType='customer', **kwargs):
         super().__init__(*args, **kwargs)
-        # dynamic placeholder
-        placeholer = "Name" if accountType == 'customer' else "Display Name"
-        self.fields['username'].widget.attrs['placeholder'] = placeholer
+        placeholder = "Your Name" if accountType == 'customer' else "Business Display Name"
+        self.fields['username'].widget.attrs['placeholder'] = placeholder
         self.accountType = accountType
-    
+
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 and password2 and password1 != password2:
             raise ValidationError("Passwords don't match")
         return password2
-    
+
     def save(self, commit=True):
         account = super().save(commit=False)
         account.password = make_password(self.cleaned_data['password1'])
