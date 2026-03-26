@@ -1,0 +1,84 @@
+{% extends "main/base.html" %}
+
+{% block title %}Sign Up - Bookr{% endblock %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'main/css/pages/register.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+{% endblock %}
+
+{% block content %}
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-right">
+            <div class="login-box">
+                <h1>{% if accountType == 'business' %}Business Sign Up{% else %}Customer Sign Up{% endif %}</h1>
+                <p class="subtitle">
+                    {% if accountType == 'business' %}Create your business account{% else %}Create your customer account{% endif %}
+                </p>
+
+                <div class="type-toggle">
+                    <a href="{% url 'register' 'customer' %}" class="toggle-btn {% if accountType == 'customer' %}active{% endif %}">Customer</a>
+                    <a href="{% url 'register' 'business' %}" class="toggle-btn {% if accountType == 'business' %}active{% endif %}">Business</a>
+                </div>
+
+                <form method="post" class="login-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="error-message">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <span class="field-error">{{ form.email.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_username">{% if accountType == 'business' %}Display Name{% else %}Name{% endif %}</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <span class="field-error">{{ form.username.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password1">Password</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <span class="field-error">{{ form.password1.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password2">Confirm Password</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <span class="field-error">{{ form.password2.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn-login">Create Account</button>
+                </form>
+
+                <div class="signup-link">
+                    <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{% endblock %}
