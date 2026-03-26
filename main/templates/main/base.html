@@ -33,6 +33,9 @@
         <a href="{% url 'contact' %}">Contact</a>
 
         {% if request.session.accountId %}
+          {% if request.session.accountType == "customer" %}
+            <a href="{% url 'my_bookings' %}">My Bookings</a>
+          {% endif %}
           <a href="{% url 'logout' %}">Log out</a>
         {% else %}
           <a href="{% url 'login' %}">Sign in</a>
