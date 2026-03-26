@@ -429,8 +429,14 @@ eventData = [
 
 bookingData = [
 
-    ("ben@example.com",     "Italian Pasta Workshop"),
-    ("ben@example.com",     "Startup Networking Mixer"),
+    ("ben@example.com", "Startup Networking Mixer"),
+    ("ben@example.com", "Morning Vinyasa Flow"),
+    ("ben@example.com", "Brunch Classics Workshop"),
+
+    ("ben@example.com", "Spring Reset Yoga"),
+    ("ben@example.com", "Fresh Ravioli Workshop"),
+    ("ben@example.com", "Soul & Jazz Evening"),
+    ("ben@example.com", "Community Poetry Night"),
 
     ("sara@example.com",    "Italian Pasta Workshop"),
     ("sara@example.com",    "Live Jazz Night"),
@@ -552,9 +558,9 @@ ratingData = [
     ("alice@example.com",   "music@example.com",    4),
     ("alice@example.com",   "food@example.com",     5),
 
-    ("ben@example.com",     "yoga@example.com",     4),
-    ("ben@example.com",     "network@example.com",  5),
-    ("ben@example.com",     "music@example.com",    4),
+    ("ben@example.com", "yoga@example.com", 4),
+    ("ben@example.com", "cooking@example.com", 5),
+    ("ben@example.com", "music@example.com", 4),
 
     ("sara@example.com",    "cooking@example.com",  5),
     ("sara@example.com",    "music@example.com",    4),
