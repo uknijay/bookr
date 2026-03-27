@@ -1,7 +1,9 @@
 # bookr# Bookr
-
-Bookr is a Django web application for discovering, creating, and booking events.
-
+- Bookr is a 2-sided platform which makes it easy to attend and run events
+- Customers who want an easy, fast, reliable way to discover and book events
+- Businesses who need a simple system to post their events, draw attendees to them, and manage and share event information easily
+- Current event booking systems are often expensive, hard to use, can have outdated attendance info, and may cause businesses to scatter their event information across different sites
+- Bookr centralises all information so that event information is clear, bookings are easily tracked, and capacity is accurate
 ## Local Setup
 
 ### 1. Install Anaconda
@@ -42,6 +44,17 @@ python manage.py runserver
 Then open the local URL shown in the terminal, usually:
 
 http://127.0.0.1:8000/
+
+
+## Run tests
+
+To run the automated tests for the project, use:
+
+python manage.py test
+
+This will run the test suite and check that the main parts of the application are working correctly.
+
+
 
 ## Notes
 
